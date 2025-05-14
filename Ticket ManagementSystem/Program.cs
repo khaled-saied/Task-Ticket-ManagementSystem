@@ -1,3 +1,6 @@
+using DAL.Data.DbContexts;
+using Microsoft.EntityFrameworkCore;
+
 namespace Ticket_ManagementSystem
 {
     public class Program
@@ -6,12 +9,20 @@ namespace Ticket_ManagementSystem
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            
+            #region Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            #endregion
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            #region Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -29,6 +40,7 @@ namespace Ticket_ManagementSystem
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+            #endregion
 
             app.Run();
         }

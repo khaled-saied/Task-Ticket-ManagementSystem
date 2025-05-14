@@ -12,6 +12,7 @@ namespace DAL.Models
         //FullName
         public string FullName { get; set; } = string.Empty;
 
-
+        //Navigation properties
+        public ICollection<Project> Projects { get; set; } = new List<Project>();
     }
 }

@@ -11,5 +11,11 @@ namespace DAL.Models
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
 
+        public string UserId { get; set; } // FK to ApplicationUser
+
+        //Navigation properties
+        public ICollection<TaskK> Tasks { get; set; } = new List<TaskK>();
+        public ApplicationUser User { get; set; } // Navigation property to ApplicationUser
+
     }
 }

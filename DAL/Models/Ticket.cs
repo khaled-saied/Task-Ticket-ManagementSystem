@@ -13,6 +13,11 @@ namespace DAL.Models
         public string Description { get; set; } = string.Empty;
         public TicketTypeEnum Type { get; set; } // Enum for ticket type    
         public TicketStatusEnum Status { get; set; } // Enum for ticket status
-       
+
+        public int TaskId { get; set; } // FK to Task
+
+        //Navigation properties
+        public TaskK Task { get; set; } // Navigation property to Task
+
     }
 }

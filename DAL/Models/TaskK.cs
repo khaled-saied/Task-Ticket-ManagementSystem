@@ -13,5 +13,10 @@ namespace DAL.Models
         public string Description { get; set; } = string.Empty;
         public TaskStatusEnum Status { get; set; }
 
+        public int ProjectId { get; set; } // FK to Project
+        public ICollection<Ticket> Tickets { get; set; } // Navigation property to Ticket
+
+        public Project Project { get; set; } // Navigation property to Project
+
     }
 }

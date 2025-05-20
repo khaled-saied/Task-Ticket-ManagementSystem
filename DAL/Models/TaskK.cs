@@ -12,6 +12,7 @@ namespace DAL.Models
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public TaskStatusEnum Status { get; set; }
+        public DateTime DueDate { get; set; } // ✅ New property for due date
 
         public int ProjectId { get; set; } // FK to Project
         public ICollection<Ticket> Tickets { get; set; } // Navigation property to Ticket

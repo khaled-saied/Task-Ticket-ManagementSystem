@@ -1,3 +1,4 @@
+using BLL.Profiles;
 using DAL.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,10 @@ namespace Ticket_ManagementSystem
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            // Add AutoMapper
+            builder.Services.AddAutoMapper(typeof(Program));
+
 
             #endregion
 

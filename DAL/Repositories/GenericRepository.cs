@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class GenericRepository<TEntity, TKey>(ApplicationDbContext _dbContext) : IGenericRepository<TEntity, TKey> where TEntity : BaseEntity
+    public class GenericRepository<TEntity, TKey>(ApplicationDbContext _dbContext) : IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
     {
         //Get all
         public async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -24,24 +24,21 @@ namespace DAL.Repositories
         }
 
         //Add
-        public async Task<int> AddAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
             await _dbContext.Set<TEntity>().AddAsync(entity);
-            return await _dbContext.SaveChangesAsync();
         }
 
         //Update
-        public async Task<int> UpdateAsync(TEntity entity)
+        public void UpdateAsync(TEntity entity)
         {
             _dbContext.Set<TEntity>().Update(entity);
-            return await _dbContext.SaveChangesAsync();
         }
 
         //Delete
-        public async Task<int> DeleteAsync(TKey id)
+        public async void DeleteAsync(TKey id)
         {
             _dbContext.Set<TEntity>().Remove(await GetByIdAsync(id));
-            return await _dbContext.SaveChangesAsync();
         }
 
     }

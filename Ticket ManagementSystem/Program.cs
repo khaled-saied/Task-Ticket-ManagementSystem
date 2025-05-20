@@ -1,5 +1,6 @@
 using BLL.Profiles;
 using DAL.Data.DbContexts;
+using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ticket_ManagementSystem
@@ -21,6 +22,7 @@ namespace Ticket_ManagementSystem
 
             // Add AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
+
 
 
             #endregion

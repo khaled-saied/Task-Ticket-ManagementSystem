@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.DataTransferObjects.ProjectDtos;
+using BLL.DataTransferObjects.TicketDtos;
 
 namespace BLL.DataTransferObjects
 {
@@ -16,6 +17,6 @@ namespace BLL.DataTransferObjects
         public string Status { get; set; }
         public DateTime DueDate { get; set; }
         public ProjectDto Project { get; set; }
-        //public List<TicketDto> Tickets { get; set; }
+        public List<TicketDto> Tickets { get; set; }
     }
 }

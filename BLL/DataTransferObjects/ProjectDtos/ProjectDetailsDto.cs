@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.DataTransferObjects.TaskDtos;
 
 namespace BLL.DataTransferObjects.ProjectDtos
 {
@@ -18,7 +19,7 @@ namespace BLL.DataTransferObjects.ProjectDtos
 
         public string OwnerName { get; set; } = string.Empty;
 
-        //public List<TaskDto> Tasks { get; set; } = new();
+        public List<TaskDto> Tasks { get; set; } = new();
 
     }
 }

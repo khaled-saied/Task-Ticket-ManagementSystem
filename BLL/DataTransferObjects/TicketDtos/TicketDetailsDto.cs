@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.DataTransferObjects.CommentDtos;
 using BLL.DataTransferObjects.TaskDtos;
 
 namespace BLL.DataTransferObjects.TicketDtos
@@ -16,7 +17,7 @@ namespace BLL.DataTransferObjects.TicketDtos
         public string Status { get; set; } = string.Empty;
         public string TaskTitle { get; set; } = string.Empty;
         public TaskDto TaskDto { get; set; } 
-        //public List<CommentDto> Comments { get; set; } = [];
+        public List<CommentDto> Comments { get; set; } = [];
 
     }
 }

@@ -18,6 +18,7 @@ namespace DAL.Models
 
         //Navigation properties
         public TaskK Task { get; set; } // Navigation property to Task
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     }
 }

@@ -1,0 +1,79 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BLL.Exceptions;
+using BLL.Services.Interfaces;
+using DAL.Repositories;
+using Microsoft.EntityFrameworkCore;
+
+namespace BLL.Services.Classes
+{
+    public class ProjectService(IUnitOfWork _unitOfWork,
+                                IMapper _mapper) : IProjectService
+    {
+
+        //Get all projects
+        public async Task<IEnumerable<ProjectDto>> GetAllProjects()
+        {
+            var projectsQuery = _unitOfWork.GetRepository<Project, int>().GetAllActive();
+            var projects = await projectsQuery.ToListAsync(); 
+            var projectDtos = _mapper.Map<IEnumerable<ProjectDto>>(projects);
+            return projectDtos;
+        }
+
+        //Get project by id
+        public async Task<ProjectDetailsDto> GetProjectById(int id)
+        {
+            var Project = await _unitOfWork.GetRepository<Project, int>().GetByIdAsync(id);
+            if (Project == null)
+            {
+                throw new NotFoundException($"Project with id {id} not found");
+            }
+            var projectDto = _mapper.Map<ProjectDetailsDto>(Project);
+            return projectDto;
+        }
+
+        //Create project
+        public async Task<int> CreateProject(CreateProjectDto createProjectDto)
+        {
+            var Project = _mapper.Map<Project>(createProjectDto);
+            var isExist = _unitOfWork.GetRepository<Project, int>().GetAllActive()
+                .Any(p => p.Name == createProjectDto.Name);
+
+            if (isExist)
+                throw new ConflictException("Project with the same name already exists.");
+
+            await _unitOfWork.GetRepository<Project, int>().AddAsync(Project);
+            return await _unitOfWork.SaveChanges();
+        }
+
+
+        //Update project
+        public async Task<int> UpdateProject(UpdateProjectDto updateProjectDto)
+        {
+            var Project = _mapper.Map<Project>(updateProjectDto);
+            var existingProject = await _unitOfWork.GetRepository<Project, int>().GetByIdAsync(updateProjectDto.Id);
+            if (existingProject == null)
+            {
+                throw new NotFoundException($"Project with id {updateProjectDto.Id} not found");
+            }
+             _unitOfWork.GetRepository<Project, int>().Update(Project);
+            return await _unitOfWork.SaveChanges();
+        }
+
+        //Delete project
+        public async Task<bool> DeleteProject(int id)
+        {
+            var project = await _unitOfWork.GetRepository<Project, int>().GetAllActive().FirstOrDefaultAsync(p => p.Id == id);
+            if (project == null)
+            {
+                throw new NotFoundException($"Project with id {id} not found");
+            }
+            project.IsDeleted = true;
+             _unitOfWork.GetRepository<Project, int>().Update(project);
+            return await _unitOfWork.SaveChanges() > 0 ? true : false;
+        }
+    }
+}

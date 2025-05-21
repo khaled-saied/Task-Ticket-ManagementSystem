@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Models
 {
-    public class Comment : BaseEntity
+    public class Comment : BaseEntity<int>
     {
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } 

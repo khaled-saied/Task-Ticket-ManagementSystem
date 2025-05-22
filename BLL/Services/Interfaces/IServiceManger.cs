@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Interfaces
 {
-    interface IServiceManger
+    public interface IServiceManger
     {
         ICommentService CommentService { get; }
         ITicketService TicketService { get; }

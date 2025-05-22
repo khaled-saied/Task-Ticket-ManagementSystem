@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ProjectDto>
+
+@{
+	ViewBag.Title = "Projects";
+}
+
+<div class="container mt-5">
+	<div class="card shadow rounded">
+		<div class="card-body">
+			<div class="d-flex justify-content-between align-items-center mb-3">
+				<h2 class="mb-0">Projects</h2>
+				<a class="btn btn-success rounded-pill px-4" asp-action="Create">
+					<i class="bi bi-plus-circle me-1"></i> Create New Project
+				</a>
+			</div>
+
+			@if (Model.Any())
+			{
+				<div class="table-responsive">
+					<table class="table table-hover text-center align-middle">
+						<thead class="table-dark">
+							<tr>
+								<th>Id</th>
+								<th>Name</th>
+								<th>Description</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var project in Model)
+							{
+								<tr>
+									<td>@project.Id</td>
+									<td>@project.Name</td>
+									<td>@project.Description</td>
+									<td>
+										<a asp-action="Details" asp-route-id="@project.Id" class="btn btn-info btn-sm rounded-pill me-1">
+											<i class="bi bi-eye"></i> Details
+										</a>
+										<a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-warning btn-sm rounded-pill me-1">
+											<i class="bi bi-pencil-square"></i> Edit
+										</a>
+										<a asp-action="Delete" asp-route-id="@project.Id" class="btn btn-danger btn-sm rounded-pill">
+											<i class="bi bi-trash"></i> Delete
+										</a>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
+			else
+			{
+				<div class="alert alert-info text-center">
+					No projects found!!
+				</div>
+			}
+		</div>
+	</div>
+</div>

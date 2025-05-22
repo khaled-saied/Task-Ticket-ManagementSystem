@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Interfaces
 {
-    interface ITaskService
+    public interface ITaskService
     {
         Task<IEnumerable<TaskDto>> GetAllTasks();
         Task<TaskDetailsDto> GetTaskById(int id);

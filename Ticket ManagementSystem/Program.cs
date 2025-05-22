@@ -1,3 +1,4 @@
+using BLL;
 using BLL.Exceptions;
 using BLL.Profiles;
 using DAL.Data.DbContexts;
@@ -21,10 +22,7 @@ namespace Ticket_ManagementSystem
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            // Add AutoMapper
-            builder.Services.AddAutoMapper(typeof(Program));
-
-
+            builder.Services.AddApplicationServices();
 
             #endregion
 

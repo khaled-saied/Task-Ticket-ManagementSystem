@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Interfaces
 {
-    public interface ITicketService
+    interface ITicketService
     {
         Task<IEnumerable<TicketDto>> GetAllAsync();
         Task<TicketDetailsDto> GetTicketById(int id);

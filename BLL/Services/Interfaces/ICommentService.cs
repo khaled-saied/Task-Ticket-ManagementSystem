@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Interfaces
 {
-    public interface ICommentService
+    interface ICommentService
     {
         Task<IEnumerable<CommentDto>> GetAllCommentsAsync();
         Task<CommentDetailsDto> GetCommentByIdAsync(int id);

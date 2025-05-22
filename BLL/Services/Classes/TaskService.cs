@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Classes
 {
-    public class TaskService(IUnitOfWork _unitOfWork,
+    class TaskService(IUnitOfWork _unitOfWork,
                              IMapper _mapper) : ITaskService
     {
 

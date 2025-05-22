@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Classes
 {
-    public class CommentService(IUnitOfWork _unitOfWork,
+    class CommentService(IUnitOfWork _unitOfWork,
                                 IMapper _mapper) : ICommentService
     {
         public async Task<IEnumerable<CommentDto>> GetAllCommentsAsync()

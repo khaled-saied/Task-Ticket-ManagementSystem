@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Classes
 {
-    public class ProjectService(IUnitOfWork _unitOfWork,
+    class ProjectService(IUnitOfWork _unitOfWork,
                                 IMapper _mapper) : IProjectService
     {
 

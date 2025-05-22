@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Classes
 {
-    public class TicketService(IUnitOfWork _unitOfWork,
+    class TicketService(IUnitOfWork _unitOfWork,
                                IMapper _mapper) : ITicketService
     {
         //get all tickets

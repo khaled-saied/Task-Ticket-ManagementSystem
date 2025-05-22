@@ -1,3 +1,4 @@
+using BLL.Exceptions;
 using BLL.Profiles;
 using DAL.Data.DbContexts;
 using DAL.Repositories;
@@ -39,6 +40,7 @@ namespace Ticket_ManagementSystem
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseAuthorization();
 

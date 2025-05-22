@@ -7,7 +7,7 @@ using DAL.Models.Enums;
 
 namespace DAL.Models
 {
-    public class Ticket : BaseEntity
+    public class Ticket : BaseEntity<int>
     {
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

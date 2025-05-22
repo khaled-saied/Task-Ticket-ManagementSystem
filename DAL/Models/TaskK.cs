@@ -7,7 +7,7 @@ using DAL.Models.Enums;
 
 namespace DAL.Models
 {
-    public class TaskK : BaseEntity
+    public class TaskK : BaseEntity<int>
     {
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

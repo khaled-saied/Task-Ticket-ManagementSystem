@@ -8,7 +8,7 @@ namespace DAL.Repositories
         IQueryable<TEntity> GetAllActive();
         Task<TEntity?> GetByIdAsync(TKey id);
         Task AddAsync(TEntity entity);
-        void UpdateAsync(TEntity entity);
+        void Update(TEntity entity);
         void DeleteAsync(TKey id);
     }
 }

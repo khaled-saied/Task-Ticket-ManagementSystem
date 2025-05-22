@@ -30,7 +30,7 @@ namespace DAL.Repositories
         }
 
         //Update
-        public void UpdateAsync(TEntity entity)
+        public void Update(TEntity entity)
         {
             _dbContext.Set<TEntity>().Update(entity);
         }

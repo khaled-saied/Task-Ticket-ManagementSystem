@@ -15,9 +15,10 @@ namespace BLL.DataTransferObjects.TicketDtos
         public string Title { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
-        public string TaskTitle { get; set; } = string.Empty;
-        public TaskDto TaskDto { get; set; } 
+        public TaskDto Task { get; set; } 
         public List<CommentDto> Comments { get; set; } = [];
 
     }
+
+
 }

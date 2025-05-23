@@ -2,7 +2,9 @@ using BLL;
 using BLL.Exceptions;
 using BLL.Profiles;
 using DAL.Data.DbContexts;
+using DAL.Models;
 using DAL.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ticket_ManagementSystem
@@ -10,7 +12,7 @@ namespace Ticket_ManagementSystem
     public class Program
     {
         public static void Main(string[] args)
-        {
+        { 
             var builder = WebApplication.CreateBuilder(args);
 
             
@@ -23,6 +25,14 @@ namespace Ticket_ManagementSystem
             });
 
             builder.Services.AddApplicationServices();
+
+            //Add Service Of Authentication
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
+            {
+                op.User.RequireUniqueEmail = true;
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             #endregion
 
@@ -37,15 +47,19 @@ namespace Ticket_ManagementSystem
             }
 
             app.UseHttpsRedirection();
-            app.UseRouting();
             app.UseMiddleware<ExceptionMiddleware>();
 
+            app.UseStaticFiles(); 
+
+            app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Account}/{action=Register}/{id?}")
                 .WithStaticAssets();
             #endregion
 

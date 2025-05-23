@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using BLL.Exceptions;
 using BLL.Services.Interfaces;
 using DAL.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Classes
 {
+    
     public class ProjectService(IUnitOfWork _unitOfWork,
-                                IMapper _mapper) : IProjectService
+                                IMapper _mapper
+        ) : IProjectService
     {
 
         //Get all projects
@@ -39,6 +42,7 @@ namespace BLL.Services.Classes
         public async Task<int> CreateProject(CreateProjectDto createProjectDto)
         {
             var Project = _mapper.Map<Project>(createProjectDto);
+
             var isExist = _unitOfWork.GetRepository<Project, int>().GetAllActive()
                 .Any(p => p.Name == createProjectDto.Name);
 

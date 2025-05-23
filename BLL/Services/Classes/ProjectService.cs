@@ -13,8 +13,8 @@ namespace BLL.Services.Classes
 {
     
     public class ProjectService(IUnitOfWork _unitOfWork,
-                                IMapper _mapper
-        ) : IProjectService
+                                IMapper _mapper,
+                                UserManager<ApplicationUser> _userManager) : IProjectService
     {
 
         //Get all projects
@@ -39,9 +39,10 @@ namespace BLL.Services.Classes
         }
 
         //Create project
-        public async Task<int> CreateProject(CreateProjectDto createProjectDto)
+        public async Task<int> CreateProject(CreateProjectDto createProjectDto,ApplicationUser User)
         {
             var Project = _mapper.Map<Project>(createProjectDto);
+            Project.UserId = User.Id;
 
             var isExist = _unitOfWork.GetRepository<Project, int>().GetAllActive()
                 .Any(p => p.Name == createProjectDto.Name);

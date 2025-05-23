@@ -12,7 +12,7 @@ namespace BLL.Services.Interfaces
 
         Task<ProjectDetailsDto> GetProjectById(int id);
 
-        Task<int> CreateProject(CreateProjectDto createProjectDto);
+        Task<int> CreateProject(CreateProjectDto createProjectDto, ApplicationUser User);
 
         Task<int> UpdateProject(UpdateProjectDto updateProjectDto);
         Task<bool> DeleteProject(int id);

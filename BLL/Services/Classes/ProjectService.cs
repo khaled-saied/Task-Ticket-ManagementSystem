@@ -29,12 +29,16 @@ namespace BLL.Services.Classes
         //Get project by id
         public async Task<ProjectDetailsDto> GetProjectById(int id)
         {
-            var Project = await _unitOfWork.GetRepository<Project, int>().GetByIdAsync(id);
-            if (Project == null)
+            var project = await _unitOfWork.GetRepository<Project, int>()
+                                           .GetAllActive()
+                                           .Include(p => p.User)
+                                           .Include(p => p.Tasks)
+                                           .FirstOrDefaultAsync(p => p.Id == id);
+            if (project == null)
             {
                 throw new NotFoundException($"Project with id {id} not found");
             }
-            var projectDto = _mapper.Map<ProjectDetailsDto>(Project);
+            var projectDto = _mapper.Map<ProjectDetailsDto>(project);
             return projectDto;
         }
 

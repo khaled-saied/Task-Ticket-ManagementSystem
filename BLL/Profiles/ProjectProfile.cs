@@ -16,8 +16,8 @@ namespace BLL.Profiles
 
             // Project → ProjectDetailsDto
             CreateMap<Project, ProjectDetailsDto>()
-                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.User.FullName)) // لو مستخدم FullName
-                .ForMember(dest => dest.Tasks, opt => opt.MapFrom(src => src.Tasks)); // AutoMapper هيستخدم TaskDto
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.User.UserName)) 
+                .ForMember(dest => dest.Tasks, opt => opt.MapFrom(src => src.Tasks));
         }
     }
 }

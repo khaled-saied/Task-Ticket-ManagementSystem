@@ -119,5 +119,28 @@ namespace Ticket_ManagementSystem.Controllers
 
         #endregion
 
+        #region Details
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                var project = await _serviceManger.ProjectService.GetProjectById(id);
+                if (project == null)
+                {
+                    throw new NotFoundException("Project not found");
+                }
+                return View(project);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving project details");
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        #endregion
+
     }
 }

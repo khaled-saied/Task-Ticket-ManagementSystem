@@ -62,5 +62,62 @@ namespace Ticket_ManagementSystem.Controllers
 
         #endregion
 
+        #region Update
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            try
+            {
+                var project = await _serviceManger.ProjectService.GetProjectById(id);
+                if (project == null)
+                {
+                    throw new NotFoundException("Project not found");
+                }
+                var updateDto = new UpdateProjectDto
+                {
+                    Id = project.Id,
+                    Name = project.Name,
+                    Description = project.Description
+                };
+
+                return View(updateDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving project for update");
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(int id, UpdateProjectDto updateProjectDto)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var UserLogin = await _userManager.GetUserAsync(User)
+                        ?? throw new NotFoundException("User not found");
+                    var Result = await _serviceManger.ProjectService.UpdateProject( updateProjectDto );
+                    if (Result > 0)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Project update failed");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating project");
+            }
+            return View(updateProjectDto);
+        }
+
+        #endregion
+
     }
 }

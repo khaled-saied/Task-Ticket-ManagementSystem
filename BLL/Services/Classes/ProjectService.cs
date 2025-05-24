@@ -58,13 +58,14 @@ namespace BLL.Services.Classes
         //Update project
         public async Task<int> UpdateProject(UpdateProjectDto updateProjectDto)
         {
-            var Project = _mapper.Map<Project>(updateProjectDto);
             var existingProject = await _unitOfWork.GetRepository<Project, int>().GetByIdAsync(updateProjectDto.Id);
+
             if (existingProject == null)
-            {
                 throw new NotFoundException($"Project with id {updateProjectDto.Id} not found");
-            }
-             _unitOfWork.GetRepository<Project, int>().Update(Project);
+
+            _mapper.Map(updateProjectDto, existingProject);
+
+            _unitOfWork.GetRepository<Project, int>().Update(existingProject);
             return await _unitOfWork.SaveChanges();
         }
 

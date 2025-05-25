@@ -8,7 +8,7 @@ using DAL.Repositories;
 
 namespace BLL.Services.Classes
 {
-    class ServiceMangerWithFactorDelegate(Func<IProjectService> ProjectServiceFactory,
+    public class ServiceMangerWithFactorDelegate(Func<IProjectService> ProjectServiceFactory,
                                                  Func<ITicketService> TicketServiceFactory,
                                                  Func<ITaskService> TaskServiceFactory,
                                                  Func<ICommentService> CommentServiceFactory) : IServiceManger

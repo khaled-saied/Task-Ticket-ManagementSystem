@@ -20,10 +20,11 @@ namespace DAL.Data.DbContexts
             builder.Entity<ApplicationUser>().ToTable("Users");
             builder.Entity<IdentityRole>().ToTable("Roles");
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
-            builder.Ignore<IdentityUserClaim<string>>();
-            builder.Ignore<IdentityUserLogin<string>>();
-            builder.Ignore<IdentityUserToken<string>>();
-            builder.Ignore<IdentityRoleClaim<string>>();
+            builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
+            builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+            builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+            builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+
         }
 
         public DbSet<Project> Projects { get; set; }

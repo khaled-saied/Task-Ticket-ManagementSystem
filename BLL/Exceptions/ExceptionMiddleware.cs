@@ -1,7 +1,5 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using System.Net.Http;
 
 namespace BLL.Exceptions
 {
@@ -25,10 +23,20 @@ namespace BLL.Exceptions
             {
                 await HandleExceptionAsync(context, StatusCodes.Status409Conflict, ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await HandleExceptionAsync(context, StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
+                await HandleInternalServerError(context, ex);
             }
+        }
+
+        private static async Task HandleInternalServerError(HttpContext context, Exception ex)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+            var response = new { error = ex.Message };
+            var json = System.Text.Json.JsonSerializer.Serialize(response);
+            await context.Response.WriteAsync(json);
         }
 
         private static async Task HandleExceptionAsync(HttpContext context, int statusCode, string message)

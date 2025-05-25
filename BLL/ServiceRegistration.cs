@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Profiles;
 using BLL.Services.Classes;
 using BLL.Services.Interfaces;
 using DAL.Repositories;
@@ -17,7 +18,7 @@ namespace BLL
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             // Add AutoMapper
-            services.AddAutoMapper(typeof(AssemblyReference).Assembly);
+            services.AddAutoMapper(typeof(ProjectProfile).Assembly);
 
             //Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

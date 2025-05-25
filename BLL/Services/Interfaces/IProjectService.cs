@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Interfaces
 {
-    interface IProjectService
+    public interface IProjectService
     {
         Task<IEnumerable<ProjectDto>> GetAllProjects();
 
         Task<ProjectDetailsDto> GetProjectById(int id);
 
-        Task<int> CreateProject(CreateProjectDto createProjectDto);
+        Task<int> CreateProject(CreateProjectDto createProjectDto, ApplicationUser User);
 
         Task<int> UpdateProject(UpdateProjectDto updateProjectDto);
         Task<bool> DeleteProject(int id);

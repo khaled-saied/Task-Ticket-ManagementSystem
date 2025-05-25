@@ -1,0 +1,76 @@
+﻿@model ProjectDetailsDto
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+
+<div class="container mt-5">
+    <h2 class="mb-4">@Model.Name</h2>
+
+    <div class="mb-3">
+        <strong>Description:</strong>
+        <p>@Model.Description</p>
+    </div>
+
+    <div class="mb-3">
+        <strong>Owner:</strong>
+        <span>@Model.OwnerName</span>
+    </div>
+
+    <div class="mb-3">
+        <strong>Created At:</strong>
+        <span>@Model.CreatedAt.ToString("dd MMM yyyy - hh:mm tt")</span>
+    </div>
+
+    <div class="mb-3">
+        <strong>Last Updated:</strong>
+        <span>@Model.UpdatedAt.ToString("dd MMM yyyy - hh:mm tt")</span>
+    </div>
+
+    <div class="mb-3">
+        <strong>Status:</strong>
+        <span class="badge bg-@(Model.IsDeleted ? "danger" : "success")">
+            @(Model.IsDeleted ? "Deleted" : "Active")
+        </span>
+    </div>
+
+    <h4 class="mt-4">Tasks</h4>
+
+    @if (Model.Tasks != null && Model.Tasks.Count > 0)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.Tasks)
+                {
+                    <tr>
+                        <td>@task.Title</td>
+                        <td>@task.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No tasks available for this project!!!
+        </div>
+    }
+
+    <div class="mt-4 d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary"> Back to Projects </a>
+        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary"> Update Project </a>
+    </div>
+</div>
+
+

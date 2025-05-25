@@ -1,61 +1,83 @@
 ﻿@model IEnumerable<ProjectDto>
 
 @{
-	ViewBag.Title = "Projects";
+    ViewBag.Title = "Projects";
 }
 
 <div class="container mt-5">
-	<div class="card shadow rounded">
-		<div class="card-body">
-			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h2 class="mb-0">Projects</h2>
-				<a class="btn btn-success rounded-pill px-4" asp-action="Create">
-					<i class="bi bi-plus-circle me-1"></i> Create New Project
-				</a>
-			</div>
+    <div class="card shadow rounded">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">Projects</h2>
+                <a class="btn btn-success rounded-pill px-4" asp-action="Create">
+                    <i class="bi bi-plus-circle me-1"></i> Create New Project
+                </a>
+            </div>
 
-			@if (Model.Any())
-			{
-				<div class="table-responsive">
-					<table class="table table-hover text-center align-middle">
-						<thead class="table-dark">
-							<tr>
-								<th>Id</th>
-								<th>Name</th>
-								<th>Description</th>
-								<th>Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (var project in Model)
-							{
-								<tr>
-									<td>@project.Id</td>
-									<td>@project.Name</td>
-									<td>@project.Description</td>
-									<td>
-										<a asp-action="Details" asp-route-id="@project.Id" class="btn btn-info btn-sm rounded-pill me-1">
-											<i class="bi bi-eye"></i> Details
-										</a>
-										<a asp-action="Update" asp-route-id="@project.Id" class="btn btn-warning btn-sm rounded-pill me-1">
-											<i class="bi bi-pencil-square"></i> Edit
-										</a>
-										<a asp-action="Delete" asp-route-id="@project.Id" class="btn btn-danger btn-sm rounded-pill">
-											<i class="bi bi-trash"></i> Delete
-										</a>
-									</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				</div>
-			}
-			else
-			{
-				<div class="alert alert-info text-center">
-					No projects found!!
-				</div>
-			}
-		</div>
-	</div>
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover text-center align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var project in Model)
+                            {
+                                <tr>
+                                    <td>@project.Id</td>
+                                    <td>@project.Name</td>
+                                    <td>@project.Description</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@project.Id" class="btn btn-info btn-sm rounded-pill me-1">
+                                            <i class="bi bi-eye"></i> Details
+                                        </a>
+                                        <a asp-action="Update" asp-route-id="@project.Id" class="btn btn-warning btn-sm rounded-pill me-1">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <button type="button" class="btn btn-danger btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#deleteModal-@project.Id">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Delete Modal (OUTSIDE of <td>) -->
+                                <div class="modal fade" id="deleteModal-@project.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@project.Id" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel-@project.Id">Delete Project</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete the project <strong>@project.Name</strong>?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <form method="post" asp-action="Delete" asp-controller="Project" asp-route-id="@project.Id" class="d-inline">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    No projects found!!
+                </div>
+            }
+        </div>
+    </div>
 </div>

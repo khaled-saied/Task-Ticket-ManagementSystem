@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using BLL.DataTransferObjects.ProjectDtos;
 using BLL.Exceptions;
+using BLL.Services.Classes;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -137,6 +139,41 @@ namespace Ticket_ManagementSystem.Controllers
             {
                 _logger.LogError(ex, "Error retrieving project details");
                 return RedirectToAction(nameof(Index));
+            }
+        }
+
+        #endregion
+
+        #region Delete
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id == 0) return BadRequest();
+            try
+            {
+                var success = await _serviceManger.ProjectService.DeleteProject(id);
+                if (!success)
+                {
+                    ModelState.AddModelError("", "Delete failed.");
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                if (_environment.IsDevelopment())
+                {
+                    //1- Devolpment=> log error in console and return error message to user
+                    //ModelState.AddModelError("", ex.Message);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    //2-Deployment=> log error in file or database and return  error view,
+                    _logger.LogError(ex.Message);
+                    return View("ErrorView", ex);
+                }
             }
         }
 

@@ -76,14 +76,35 @@ namespace BLL.Services.Classes
         //Delete project
         public async Task<bool> DeleteProject(int id)
         {
-            var project = await _unitOfWork.GetRepository<Project, int>().GetAllActive().FirstOrDefaultAsync(p => p.Id == id);
+            var project = await _unitOfWork.GetRepository<Project, int>()
+                .GetAllActive()
+                .Include(p => p.Tasks)
+                    .ThenInclude(t => t.Tickets)
+                        .ThenInclude(tc => tc.Comments)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (project == null)
-            {
                 throw new NotFoundException($"Project with id {id} not found");
+
+            // Soft delete all comments
+            foreach (var task in project.Tasks)
+            {
+                foreach (var ticket in task.Tickets)
+                {
+                    foreach (var comment in ticket.Comments)
+                        comment.IsDeleted = true;
+
+                    ticket.IsDeleted = true;
+                }
+
+                task.IsDeleted = true;
             }
+
             project.IsDeleted = true;
-             _unitOfWork.GetRepository<Project, int>().Update(project);
-            return await _unitOfWork.SaveChanges() > 0 ? true : false;
+
+            _unitOfWork.GetRepository<Project, int>().Update(project);
+            return await _unitOfWork.SaveChanges() > 0;
         }
+
     }
 }

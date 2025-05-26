@@ -1,0 +1,62 @@
+﻿@model CreateTaskViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="mb-4">Create New Task</h2>
+
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" class="form-control" placeholder="Enter task title" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter task description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DueDate" class="form-label"></label>
+                    <input asp-for="DueDate" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="DueDate" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ProjectId" class="form-label">Select Project</label>
+                    @if (Model.ProjectId != 0)
+                    {
+                        <select asp-for="ProjectId" asp-items="Model.Projects" class="form-select" disabled="disabled"></select>
+                        <input type="hidden" asp-for="ProjectId" />
+                    }
+                    else
+                    {
+                        <select asp-for="ProjectId" asp-items="Model.Projects" class="form-select">
+                            <option value="">-- Select a project --</option>
+                        </select>
+                    }
+                    <span asp-validation-for="ProjectId" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Task</button>
+                <a href="@(Model.ReturnUrl ?? Url.Action("Index", "Task"))" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

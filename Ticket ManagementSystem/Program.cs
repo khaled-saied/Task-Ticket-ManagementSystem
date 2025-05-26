@@ -34,6 +34,14 @@ namespace Ticket_ManagementSystem
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.SlidingExpiration = true; // This will reset the expiration time on each request, keeping the user logged in as long as they are active.
+                options.ExpireTimeSpan = TimeSpan.FromDays(2);
+            });
+
             #endregion
 
             var app = builder.Build();

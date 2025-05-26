@@ -95,5 +95,12 @@ namespace Ticket_ManagementSystem.Controllers
 
         #endregion
 
+        #region Signout
+        public async new Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Login));
+        }
+        #endregion
     }
 }

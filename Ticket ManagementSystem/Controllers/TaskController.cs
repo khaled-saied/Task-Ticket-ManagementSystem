@@ -89,6 +89,19 @@ namespace Ticket_ManagementSystem.Controllers
         }
         #endregion
 
+        #region Details
+        public async Task<IActionResult> Details(int id)
+        {
+            if (id ==0 )
+                return NotFound();
+            var task = await _serviceManger.TaskService.GetTaskById(id);
+            if (task == null)
+            {
+                return NotFound();
+            }
+            return View(task);
+        }
+        #endregion
 
 
         #region Get Project

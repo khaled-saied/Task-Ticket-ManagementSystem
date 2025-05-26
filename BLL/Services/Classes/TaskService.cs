@@ -25,7 +25,13 @@ namespace BLL.Services.Classes
         //Get task by id
         public async Task<TaskDetailsDto> GetTaskById(int id)
         {
-            var Task = await _unitOfWork.GetRepository<TaskK, int>().GetByIdAsync(id);
+            var Task = await _unitOfWork.GetRepository<TaskK, int>()
+                .GetAllActive()
+                .Include(t => t.Project)
+                .Include(t=> t.Tickets)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+
             if (Task == null)
                 throw new NotFoundException($"Task with id {id} not found");
 
@@ -41,6 +47,7 @@ namespace BLL.Services.Classes
                 throw new NotFoundException($"Project with id {createTaskDto.ProjectId} not found");
             var Task= _mapper.Map<CreateTaskDto, TaskK>(createTaskDto);
 
+            Task.Status = TaskStatusEnum.New;
             var isExist = await _unitOfWork.GetRepository<TaskK, int>().GetAllActive()
                 .AnyAsync(t => t.Title == createTaskDto.Title && t.ProjectId == createTaskDto.ProjectId);
             if (isExist)

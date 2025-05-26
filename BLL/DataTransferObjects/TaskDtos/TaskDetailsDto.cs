@@ -16,6 +16,7 @@ namespace BLL.DataTransferObjects
         public string Description { get; set; }
         public string Status { get; set; }
         public DateTime DueDate { get; set; }
+        public DateTime CreatedAt { get; set; }
         public ProjectDto Project { get; set; }
         public List<TicketDto> Tickets { get; set; }
     }

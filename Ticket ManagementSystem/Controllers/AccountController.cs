@@ -102,5 +102,13 @@ namespace Ticket_ManagementSystem.Controllers
             return RedirectToAction(nameof(Login));
         }
         #endregion
+
+        #region AccessDenied
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+        #endregion
     }
 }

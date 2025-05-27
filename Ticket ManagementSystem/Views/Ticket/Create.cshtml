@@ -1,0 +1,83 @@
+﻿@using Ticket_ManagementSystem.ViewModels.ViewModelOfTicket
+
+@model CraeteTicketViewModel
+
+@{
+    ViewData["Title"] = "Create Ticket";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var statusOptions = Enum.GetNames(typeof(TicketStatusEnum));
+    var typeOptions = Enum.GetNames(typeof(TicketTypeEnum));
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="mb-4">Create New Ticket</h2>
+
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Title</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Type" class="form-label">Type</label>
+                    <select asp-for="Type" class="form-select">
+                        <option value="">-- Select Type --</option>
+                        @foreach (var type in typeOptions)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Status" class="form-label">Status</label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="">-- Select Status --</option>
+                        @foreach (var status in statusOptions)
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="TaskId" class="form-label">Select Task</label>
+                    @if (Model.TaskId != 0)
+                    {
+                        <select asp-for="TaskId" asp-items="Model.Tasks" class="form-select" disabled="disabled"></select>
+                        <input type="hidden" asp-for="TaskId" />
+                    }
+                    else
+                    {
+                        <select asp-for="TaskId" asp-items="Model.Tasks" class="form-select">
+                            <option value="">-- Select a Task --</option>
+                        </select>
+                    }
+                    <span asp-validation-for="TaskId" class="text-danger small"></span>
+                </div>
+
+
+                <div class="d-flex justify-content-between">
+                    <a href="@(Model.RetutnUrl ?? Url.Action("Index", "Task"))" class="btn btn-secondary ms-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

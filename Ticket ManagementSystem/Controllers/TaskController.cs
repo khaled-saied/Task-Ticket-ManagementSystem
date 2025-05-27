@@ -46,8 +46,6 @@ namespace Ticket_ManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Create(int? projectId, string? returnUrl)
         {
-            var projects = await _serviceManger.ProjectService.GetAllProjects();
-
             var viewModel = new CreateTaskViewModel
             {
                 ProjectId = projectId ?? 0, // Set to 0 if no projectId is provided

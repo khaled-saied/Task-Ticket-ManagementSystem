@@ -1,0 +1,87 @@
+﻿@model TaskDetailsDto
+
+@{
+    ViewData["Title"] = "Task Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="mb-4">Task: @Model.Title</h2>
+
+            <dl class="row">
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">
+                    <span class="badge bg-@(Model.Status == "Completed" ? "success" : "warning")">
+                        @Model.Status
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Due Date</dt>
+                <dd class="col-sm-9">
+                    @Model.DueDate.ToString("dd MMM yyyy - hh:mm tt")
+
+                    @if (Model.IsOverdue)
+                    {
+                        <span class="badge bg-danger ms-2" title="This task is overdue!">
+                            ⚠️ Overdue
+                        </span>
+                    }
+                    else if (Model.IsDueSoon)
+                    {
+                        <span class="badge bg-warning text-dark ms-2" title="This task is due soon!">
+                            ⚠️ Due Soon
+                        </span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Project</dt>
+                <dd class="col-sm-9">@Model.Project?.Name</dd>
+            </dl>
+
+            <h4 class="mt-5">Tickets</h4>
+
+            @if (Model.Tickets != null && Model.Tickets.Any())
+            {
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ticket in Model.Tickets)
+                        {
+                            <tr>
+                                <td>@ticket.Title</td>
+                                <td>
+                                    <span class="badge bg-@(ticket.Status == "Open" ? "info" : ticket.Status == "Closed" ? "secondary" : "warning")">
+                                        @ticket.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <a asp-controller="Ticket" asp-action="Details" asp-route-id="@ticket.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-warning">No tickets found for this task.</div>
+            }
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">Back to Tasks</a>
+                <a asp-controller="Ticket" asp-action="Create" asp-route-taskId="@Model.Id" class="btn btn-primary">Create Ticket</a>
+            </div>
+        </div>
+    </div>
+</div>

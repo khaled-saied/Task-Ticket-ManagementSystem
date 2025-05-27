@@ -16,7 +16,11 @@ namespace BLL.DataTransferObjects
         public string Description { get; set; }
         public string Status { get; set; }
         public DateTime DueDate { get; set; }
+        public DateTime CreatedAt { get; set; }
         public ProjectDto Project { get; set; }
         public List<TicketDto> Tickets { get; set; }
+
+        public bool IsDueSoon { get; set; }  // for if the task is due soon
+        public bool IsOverdue { get; set; }  // for if the task is overdue
     }
 }

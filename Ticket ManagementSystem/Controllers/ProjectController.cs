@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ticket_ManagementSystem.Controllers
 {
+    //[Authorize(Roles ="Admin")]
     [Authorize]
     public class ProjectController(IServiceManger _serviceManger,
                                    ILogger<ProjectController> _logger,

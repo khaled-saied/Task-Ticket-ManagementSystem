@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.DataTransferObjects.TaskDtos;
 using BLL.Exceptions;
 using BLL.Services.Interfaces;
 using DAL.Repositories;
@@ -19,17 +20,34 @@ namespace BLL.Services.Classes
         {
             var Tasks = await _unitOfWork.GetRepository<TaskK,int>().GetAllActive().ToListAsync();
             var TaskDtos = _mapper.Map<IEnumerable<TaskDto>>(Tasks);
+            foreach (var task in TaskDtos)
+            {
+                UpdateTaskStatus(task);
+            }
             return TaskDtos;
         }
 
         //Get task by id
         public async Task<TaskDetailsDto> GetTaskById(int id)
         {
-            var Task = await _unitOfWork.GetRepository<TaskK, int>().GetByIdAsync(id);
+            var Task = await _unitOfWork.GetRepository<TaskK, int>()
+                .GetAllActive()
+                .Include(t => t.Project)
+                .Include(t=> t.Tickets)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+
             if (Task == null)
                 throw new NotFoundException($"Task with id {id} not found");
 
             var TaskDto = _mapper.Map<TaskDetailsDto>(Task);
+
+            if (TaskDto.Status != TaskStatusEnum.Done.ToString())
+            {
+                if (DateTime.Now > TaskDto.DueDate)
+                    TaskDto.Status = TaskStatusEnum.Blocked.ToString();
+            }
+
             return TaskDto;
         }
 
@@ -41,6 +59,7 @@ namespace BLL.Services.Classes
                 throw new NotFoundException($"Project with id {createTaskDto.ProjectId} not found");
             var Task= _mapper.Map<CreateTaskDto, TaskK>(createTaskDto);
 
+            Task.Status = TaskStatusEnum.New;
             var isExist = await _unitOfWork.GetRepository<TaskK, int>().GetAllActive()
                 .AnyAsync(t => t.Title == createTaskDto.Title && t.ProjectId == createTaskDto.ProjectId);
             if (isExist)
@@ -57,10 +76,11 @@ namespace BLL.Services.Classes
             if (existingTask == null)
                 throw new NotFoundException($"Task with id {updateTaskDto.Id} not found");
 
-            var Task = _mapper.Map<TaskK>(updateTaskDto);
-            _unitOfWork.GetRepository<TaskK, int>().Update(Task);
-            return await _unitOfWork.SaveChanges();
+            _mapper.Map(updateTaskDto, existingTask); // ✅ mapping to existing tracked entity
+            _unitOfWork.GetRepository<TaskK, int>().Update(existingTask); // ✅ optional but fine
+            return await _unitOfWork.SaveChanges(); // ✅ actually saves
         }
+
 
         //Delete task
         public async Task<bool> DeleteTask(int id)
@@ -72,5 +92,22 @@ namespace BLL.Services.Classes
             _unitOfWork.GetRepository<TaskK, int>().Update(Task);
             return await _unitOfWork.SaveChanges() > 0 ? true : false;
         }
+
+        // Update task status based on due date and current time
+        private void UpdateTaskStatus(TaskDto task)
+        {
+            if (task.Status != TaskStatusEnum.Done.ToString())
+            {
+                if (DateTime.Now > task.DueDate)
+                {
+                    task.IsOverdue = true;
+                }
+                else if ((task.DueDate - DateTime.Now).TotalHours <= 24)
+                {
+                    task.IsDueSoon = true;
+                }
+            }
+        }
+
     }
 }

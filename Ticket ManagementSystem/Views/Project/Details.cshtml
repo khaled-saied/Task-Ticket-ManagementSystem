@@ -70,6 +70,9 @@
     <div class="mt-4 d-flex justify-content-between">
         <a asp-action="Index" class="btn btn-secondary"> Back to Projects </a>
         <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary"> Update Project </a>
+        <a asp-controller="Task" asp-action="Create" asp-route-projectId="@Model.Id" asp-route-returnUrl="@Url.Action("Details", "Project", new { id = Model.Id })" class="btn btn-primary">
+            Create Task for this Project
+        </a>
     </div>
 </div>
 

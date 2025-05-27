@@ -2,7 +2,7 @@
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Ticket_ManagementSystem.ViewModels;
+using Ticket_ManagementSystem.ViewModels.AccountViewModel;
 
 namespace Ticket_ManagementSystem.Controllers
 {
@@ -52,6 +52,63 @@ namespace Ticket_ManagementSystem.Controllers
             return View(model);
         }
 
+        #endregion
+
+        #region Login
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user is { })
+            {
+                var flag = await _userManager.CheckPasswordAsync(user, model.Password);
+
+                if (flag)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: true);
+
+
+                    if (result.IsNotAllowed)
+                        ModelState.AddModelError(string.Empty, "You are not allowed to login.");
+
+                    if (result.IsLockedOut)
+                        ModelState.AddModelError(string.Empty, "Your account is locked out.");
+
+                    if (result.Succeeded)
+                        return RedirectToAction(nameof(HomeController.Index), "Home");
+                }
+            }
+            else
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(model);
+        }
+
+        #endregion
+
+        #region Signout
+        public async new Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Login));
+        }
+        #endregion
+
+        #region AccessDenied
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
         #endregion
     }
 }

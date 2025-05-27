@@ -2,9 +2,10 @@
 {
     public enum TaskStatusEnum
     {
-        ToDo = 0,        
-        InProgress = 1,  
-        Done = 2,        
-        Blocked = 3
+        New=0,
+        ToDo = 1,        
+        InProgress = 2,  
+        Done = 3,        
+        Blocked = 4
     }
 }

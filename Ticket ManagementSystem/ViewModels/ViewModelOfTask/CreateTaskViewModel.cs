@@ -3,7 +3,7 @@ using BLL.DataTransferObjects.TaskDtos;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Ticket_ManagementSystem.CustomValidationAttribute;
 
-namespace Ticket_ManagementSystem.ViewModels
+namespace Ticket_ManagementSystem.ViewModels.ViewModelOfTask
 {
     public class CreateTaskViewModel
     {

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
 using Ticket_ManagementSystem.ViewModels;
+using Ticket_ManagementSystem.ViewModels.ViewModelOfTask;
 
 namespace Ticket_ManagementSystem.Controllers
 {
@@ -103,6 +104,61 @@ namespace Ticket_ManagementSystem.Controllers
         }
         #endregion
 
+        #region Update
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            if(id == 0)
+                return NotFound();
+            var task = await _serviceManger.TaskService.GetTaskById(id);
+            if (task == null)
+            {
+                return NotFound();
+            }
+            var updateTaskViewModel = new UpdateTaskViewModel
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                DueDate = task.DueDate,
+                Status = task.Status,
+            };
+            return View(updateTaskViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UpdateTaskViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // 1. Call the service to update the task
+                    var taskDto = new UpdateTaskDto
+                    {
+                        Id = model.Id,
+                        Title = model.Title,
+                        Description = model.Description,
+                        DueDate = model.DueDate,
+                        Status = model.Status
+                    };
+                    await _serviceManger.TaskService.UpdateTask(taskDto);
+                    // 2. Redirect to the task index page
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    if (_environment.IsDevelopment())
+                    {
+                        _logger.LogError(ex, "Error updating task");
+                    }
+                    ModelState.AddModelError(string.Empty, "An error occurred while updating the task. Please try again.");
+                }
+            }
+            return View(model);
+        }
+
+        #endregion
 
         #region Get Project
         private async Task<List<SelectListItem>> GetProjectSelectListAsync()

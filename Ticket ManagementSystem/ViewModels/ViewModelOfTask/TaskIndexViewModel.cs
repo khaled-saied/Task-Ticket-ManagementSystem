@@ -2,7 +2,7 @@
 using DAL.Models.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Ticket_ManagementSystem.ViewModels
+namespace Ticket_ManagementSystem.ViewModels.ViewModelOfTask
 {
     public class TaskIndexViewModel
     {

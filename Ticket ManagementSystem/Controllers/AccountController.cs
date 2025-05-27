@@ -2,7 +2,7 @@
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Ticket_ManagementSystem.ViewModels;
+using Ticket_ManagementSystem.ViewModels.AccountViewModel;
 
 namespace Ticket_ManagementSystem.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Ticket_ManagementSystem.ViewModels
+namespace Ticket_ManagementSystem.ViewModels.AccountViewModel
 {
     public class RegisterViewModel
     {

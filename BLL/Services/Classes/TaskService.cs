@@ -64,10 +64,11 @@ namespace BLL.Services.Classes
             if (existingTask == null)
                 throw new NotFoundException($"Task with id {updateTaskDto.Id} not found");
 
-            var Task = _mapper.Map<TaskK>(updateTaskDto);
-            _unitOfWork.GetRepository<TaskK, int>().Update(Task);
-            return await _unitOfWork.SaveChanges();
+            _mapper.Map(updateTaskDto, existingTask); // ✅ mapping to existing tracked entity
+            _unitOfWork.GetRepository<TaskK, int>().Update(existingTask); // ✅ optional but fine
+            return await _unitOfWork.SaveChanges(); // ✅ actually saves
         }
+
 
         //Delete task
         public async Task<bool> DeleteTask(int id)

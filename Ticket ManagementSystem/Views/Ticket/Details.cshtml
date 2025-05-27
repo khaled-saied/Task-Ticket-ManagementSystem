@@ -1,0 +1,80 @@
+﻿@model TicketDetailsDto
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="mb-4">Ticket: @Model.Title</h2>
+
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.Id</dd>
+
+                <dt class="col-sm-3">Title</dt>
+                <dd class="col-sm-9">@Model.Title</dd>
+
+                <dt class="col-sm-3">Type</dt>
+                <dd class="col-sm-9">@Model.Type</dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">
+                    <span class="badge bg-@(Model.Status == "Open" ? "info" : Model.Status == "Closed" ? "secondary" : "warning")">
+                        @Model.Status
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Related Task</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Task != null)
+                    {
+                        <div class="card border-0 bg-light shadow-sm p-3">
+                            <h5 class="mb-1">@Model.Task.Title</h5>
+                            <p class="mb-2 text-muted">Task ID: @Model.Task.Id</p>
+                            <a asp-controller="Task"
+                               asp-action="Details"
+                               asp-route-id="@Model.Task.Id"
+                               asp-route-returnToTicket="true"
+                               asp-route-ticketId="@Model.Id"
+                               class="btn btn-sm btn-outline-primary">
+                                @Model.Task.Title
+                            </a>
+
+
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="text-muted fst-italic">No task linked</span>
+                    }
+                </dd>
+
+            </dl>
+
+            <h4 class="mt-5 mb-3">Comments</h4>
+
+            @if (Model.Comments != null && Model.Comments.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <li class="list-group-item">
+                            <strong>#@comment.Id:</strong> @comment.Content
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-warning">No comments found for this ticket.</div>
+            }
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">← Back to Tickets</a>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit Ticket</a>
+            </div>
+        </div>
+    </div>
+</div>

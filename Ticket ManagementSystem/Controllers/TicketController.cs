@@ -75,5 +75,16 @@ namespace Ticket_ManagementSystem.Controllers
 
         #endregion
 
+        #region Details
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (!id.HasValue) return BadRequest();
+            var ticket = await _serviceManger.TicketService.GetTicketById(id.Value);
+            if (ticket == null) return NotFound();
+            return View(ticket);
+        }
+        #endregion
+
     }
 }

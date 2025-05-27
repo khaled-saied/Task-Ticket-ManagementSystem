@@ -24,7 +24,10 @@ namespace BLL.Services.Classes
         //get ticket by id
         public async Task<TicketDetailsDto> GetTicketById(int id)
         {
-            var ticket = await _unitOfWork.GetRepository<Ticket, int>().GetByIdAsync(id);
+            var ticket = await _unitOfWork.GetRepository<Ticket, int>().GetAllActive()
+                                           .Include(t=> t.Task)
+                                           .Include(t=> t.Comments)
+                                           .FirstOrDefaultAsync(t => t.Id == id);
             if (ticket == null)
             {
                 throw new NotFoundException($"Ticket with id {id} not found");

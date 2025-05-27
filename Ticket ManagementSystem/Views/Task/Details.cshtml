@@ -5,6 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    var returnToTicket = Context.Request.Query["returnToTicket"] == "true";
+    var ticketId = Context.Request.Query["ticketId"];
+}
+
+
 <div class="container mt-5">
     <div class="card shadow-sm">
         <div class="card-body">
@@ -89,11 +95,24 @@
             }
 
             <div class="mt-4 d-flex justify-content-between">
-                <a asp-action="Index" class="btn btn-secondary">Back to Tasks</a>
+                @if (returnToTicket && !string.IsNullOrEmpty(ticketId))
+                {
+                    <a asp-controller="Ticket" asp-action="Details" asp-route-id="@ticketId" class="btn btn-secondary">
+                        ← Back to Ticket
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-secondary">← Back to Tasks</a>
+                }
+
                 <a asp-controller="Ticket" asp-action="Create" asp-route-taskId="@Model.Id" class="btn btn-primary rounded-pill">
                     <i class="bi bi-plus-circle"></i> Create Ticket
                 </a>
             </div>
+
+
+
         </div>
     </div>
 </div>

@@ -73,7 +73,10 @@ namespace Ticket_ManagementSystem.Controllers
                     // 1. Call the service to create the task
                     await _serviceManger.TaskService.CreateTask(taskDto);
                     // 2. Redirect to the task index page
-                    return RedirectToAction("Details", "Project", new { id = model.ProjectId });
+                    if (!string.IsNullOrEmpty(model.ReturnUrl))
+                        return Redirect(model.ReturnUrl);
+
+                    return RedirectToAction("Index", "Task");
                 }
                 catch (Exception ex)
                 {
@@ -81,7 +84,7 @@ namespace Ticket_ManagementSystem.Controllers
                     {
                         _logger.LogError(ex, "Error creating task");
                     }
-                    ModelState.AddModelError(string.Empty, "An error occurred while creating the task. Please try again.");
+                    ModelState.AddModelError(string.Empty, "This address may already exist and an error occurred while creating the task. Please try again!!.");
                 }
             }
             // If we got this far, something failed, redisplay the form
@@ -157,6 +160,38 @@ namespace Ticket_ManagementSystem.Controllers
             }
             return View(model);
         }
+
+        #endregion
+
+        #region Delete
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id == 0)
+                return NotFound();
+            try
+            {
+                var task = await _serviceManger.TaskService.GetTaskById(id);
+                if (task == null)
+                {
+                    TempData["ErrorMessage"] = "Task not found.";
+                    return RedirectToAction("Index");
+                }
+                await _serviceManger.TaskService.DeleteTask(id);
+                TempData["SuccessMessage"] = "Task deleted successfully.";
+
+            }
+            catch (Exception ex)
+            {
+                if (_environment.IsDevelopment())
+                {
+                    _logger.LogError(ex, "Error deleting task");
+                }
+                TempData["ErrorMessage"] = "An error occurred while deleting the task.";
+            }
+            return RedirectToAction("Index");
+        }
+
 
         #endregion
 

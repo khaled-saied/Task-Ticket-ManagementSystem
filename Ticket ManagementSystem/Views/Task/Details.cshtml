@@ -16,11 +16,28 @@
 
                 <dt class="col-sm-3">Status</dt>
                 <dd class="col-sm-9">
-                    <span class="badge bg-@(Model.Status == "Completed" ? "success" : "warning")">@Model.Status</span>
+                    <span class="badge bg-@(Model.Status == "Completed" ? "success" : "warning")">
+                        @Model.Status
+                    </span>
                 </dd>
 
                 <dt class="col-sm-3">Due Date</dt>
-                <dd class="col-sm-9">@Model.DueDate.ToString("dd MMM yyyy - hh:mm tt")</dd>
+                <dd class="col-sm-9">
+                    @Model.DueDate.ToString("dd MMM yyyy - hh:mm tt")
+
+                    @if (Model.IsOverdue)
+                    {
+                        <span class="badge bg-danger ms-2" title="This task is overdue!">
+                            ⚠️ Overdue
+                        </span>
+                    }
+                    else if (Model.IsDueSoon)
+                    {
+                        <span class="badge bg-warning text-dark ms-2" title="This task is due soon!">
+                            ⚠️ Due Soon
+                        </span>
+                    }
+                </dd>
 
                 <dt class="col-sm-3">Project</dt>
                 <dd class="col-sm-9">@Model.Project?.Name</dd>

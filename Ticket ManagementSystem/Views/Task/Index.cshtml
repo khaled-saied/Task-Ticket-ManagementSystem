@@ -6,8 +6,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-@* Msg*@
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -22,8 +20,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-@* *@
-
 
 <div class="container mt-5">
     <div class="card shadow rounded">
@@ -64,16 +60,33 @@
                                 <th>ID</th>
                                 <th>Title</th>
                                 <th>Status</th>
+                                <th>Due Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var task in Model.Tasks)
                             {
-                                <tr>
+                                var dueDate = task.DueDate;
+                                var now = DateTime.Now;
+                                var isOverdue = dueDate < now;
+                                var isDueSoon = dueDate >= now && dueDate <= now.AddDays(3);
+
+                                <tr class="@(isOverdue ? "table-danger" : isDueSoon ? "table-warning" : "")">
                                     <td>@task.Id</td>
                                     <td>@task.Title</td>
                                     <td>@task.Status</td>
+                                    <td>
+                                        @dueDate.ToString("yyyy-MM-dd HH:mm")
+                                        @if (isOverdue)
+                                        {
+                                            <span class="badge bg-danger ms-2">Overdue</span>
+                                        }
+                                        else if (isDueSoon)
+                                        {
+                                            <span class="badge bg-warning text-dark ms-2">Due Soon</span>
+                                        }
+                                    </td>
                                     <td>
                                         <a asp-action="Details" asp-route-id="@task.Id" class="btn btn-info btn-sm rounded-pill me-1">
                                             <i class="bi bi-eye"></i> Details

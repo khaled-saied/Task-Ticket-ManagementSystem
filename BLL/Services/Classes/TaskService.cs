@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.DataTransferObjects.TaskDtos;
 using BLL.Exceptions;
 using BLL.Services.Interfaces;
 using DAL.Repositories;
@@ -19,6 +20,10 @@ namespace BLL.Services.Classes
         {
             var Tasks = await _unitOfWork.GetRepository<TaskK,int>().GetAllActive().ToListAsync();
             var TaskDtos = _mapper.Map<IEnumerable<TaskDto>>(Tasks);
+            foreach (var task in TaskDtos)
+            {
+                UpdateTaskStatus(task);
+            }
             return TaskDtos;
         }
 
@@ -36,6 +41,13 @@ namespace BLL.Services.Classes
                 throw new NotFoundException($"Task with id {id} not found");
 
             var TaskDto = _mapper.Map<TaskDetailsDto>(Task);
+
+            if (TaskDto.Status != TaskStatusEnum.Done.ToString())
+            {
+                if (DateTime.Now > TaskDto.DueDate)
+                    TaskDto.Status = TaskStatusEnum.Blocked.ToString();
+            }
+
             return TaskDto;
         }
 
@@ -80,5 +92,22 @@ namespace BLL.Services.Classes
             _unitOfWork.GetRepository<TaskK, int>().Update(Task);
             return await _unitOfWork.SaveChanges() > 0 ? true : false;
         }
+
+        // Update task status based on due date and current time
+        private void UpdateTaskStatus(TaskDto task)
+        {
+            if (task.Status != TaskStatusEnum.Done.ToString())
+            {
+                if (DateTime.Now > task.DueDate)
+                {
+                    task.IsOverdue = true;
+                }
+                else if ((task.DueDate - DateTime.Now).TotalHours <= 24)
+                {
+                    task.IsDueSoon = true;
+                }
+            }
+        }
+
     }
 }

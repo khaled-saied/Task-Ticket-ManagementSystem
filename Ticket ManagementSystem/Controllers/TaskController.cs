@@ -96,14 +96,23 @@ namespace Ticket_ManagementSystem.Controllers
         #region Details
         public async Task<IActionResult> Details(int id)
         {
-            if (id ==0 )
+            if (id == 0)
                 return NotFound();
             var task = await _serviceManger.TaskService.GetTaskById(id);
             if (task == null)
             {
                 return NotFound();
             }
+            //return View(task);
+            // Compute IsOverdue و IsDueSoon
+            var now = DateTime.Now;
+            var dueDate = task.DueDate;
+
+            task.IsOverdue = (dueDate < now) && task.Status != "Completed";
+            task.IsDueSoon = (dueDate >= now && dueDate <= now.AddDays(3)) && task.Status != "Completed";
+
             return View(task);
+
         }
         #endregion
 

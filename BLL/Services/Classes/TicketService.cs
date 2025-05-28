@@ -65,7 +65,7 @@ namespace BLL.Services.Classes
                 .AnyAsync(t => t.Title == updateTicketDto.Title && t.Id != updateTicketDto.Id);
             if (IfExists)
                 throw new ConflictException($"Ticket with title {updateTicketDto.Title} already exists");
-            ticket = _mapper.Map<Ticket>(ticket);
+            _mapper.Map(updateTicketDto,ticket);
             _unitOfWork.GetRepository<Ticket, int>().Update(ticket);
             return await _unitOfWork.SaveChanges();
         }

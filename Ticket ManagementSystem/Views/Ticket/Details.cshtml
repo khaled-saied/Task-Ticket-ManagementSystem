@@ -16,9 +16,12 @@
                 <dt class="col-sm-3">Title</dt>
                 <dd class="col-sm-9">@Model.Title</dd>
 
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
                 <dt class="col-sm-3">Type</dt>
                 <dd class="col-sm-9">@Model.Type</dd>
-
+                
                 <dt class="col-sm-3">Status</dt>
                 <dd class="col-sm-9">
                     <span class="badge bg-@(Model.Status == "Open" ? "info" : Model.Status == "Closed" ? "secondary" : "warning")">

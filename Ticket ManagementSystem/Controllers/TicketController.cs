@@ -146,5 +146,37 @@ namespace Ticket_ManagementSystem.Controllers
 
         #endregion
 
+        #region Delete
+        [HttpPost]
+        public async Task<ActionResult> Delete(int id)
+        {
+            if (id == 0) return BadRequest();
+            try
+            {
+                bool result = await _serviceManger.TicketService.DeleteTicket(id);
+                if (result)
+                    return RedirectToAction(nameof(Index));
+                else
+                    ModelState.AddModelError(string.Empty, "Ticket was not deleted");
+            }
+            catch (Exception ex)
+            {
+                //log Exception
+                if (_environment.IsDevelopment())
+                {
+                    //1- Devolpment=> log error in console and return error message to user
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    _logger.LogError(ex.Message);
+                    return View("ErrorView", ex);
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+        #endregion
+
     }
 }

@@ -133,7 +133,7 @@ namespace DAL.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Models.Project", b =>
@@ -169,7 +169,7 @@ namespace DAL.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Models.TaskK", b =>
@@ -211,7 +211,7 @@ namespace DAL.Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Models.Ticket", b =>
@@ -254,7 +254,7 @@ namespace DAL.Data.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

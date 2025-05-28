@@ -29,6 +29,7 @@ namespace DAL.Data.Configurations
                 .WithMany() 
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
 
         }
     }

@@ -13,9 +13,23 @@ namespace Ticket_ManagementSystem.Controllers
         {
             var Comments = await _serviceManger.CommentService.GetAllCommentsAsync();
             return View(Comments);
-        } 
+        }
 
 
         #endregion
+
+        #region Details
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var comment = await _serviceManger.CommentService.GetCommentByIdAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            return View(comment);
+        }
+        #endregion
+
     }
 }

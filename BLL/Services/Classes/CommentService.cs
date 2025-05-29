@@ -23,7 +23,11 @@ namespace BLL.Services.Classes
 
         public async Task<CommentDetailsDto> GetCommentByIdAsync(int id)
         {
-            var comment = await _unitOfWork.GetRepository<Comment, int>().GetByIdAsync(id);
+            var comment = await _unitOfWork.GetRepository<Comment, int>()
+                                           .GetAllActive()
+                                           .Include(c => c.Ticket)
+                                           .Include(c => c.User)
+                                           .FirstOrDefaultAsync(c => c.Id == id);
             if (comment == null)
             {
                 throw new NotFoundException($"Comment with id {id} not found");

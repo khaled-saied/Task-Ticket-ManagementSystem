@@ -10,7 +10,7 @@ namespace BLL.Services.Interfaces
     {
         Task<IEnumerable<CommentDto>> GetAllCommentsAsync();
         Task<CommentDetailsDto> GetCommentByIdAsync(int id);
-        Task<int> CreateCommentAsync(CreateCommentDto commentDto);
+        Task<int> CreateCommentAsync(CreateCommentDto commentDto,int TicketId,string UserId);
         Task<int> UpdateCommentAsync(UpdateCommentDto commentDto);
         Task<bool> DeleteCommentAsync(int id);
     }

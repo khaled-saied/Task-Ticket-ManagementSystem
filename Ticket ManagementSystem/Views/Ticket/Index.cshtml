@@ -62,36 +62,13 @@
                                         <a asp-action="Edit" asp-route-id="@ticket.Id" class="btn btn-sm btn-warning rounded-pill me-1">
                                             <i class="bi bi-pencil-square"></i> Edit
                                         </a>
-                                        <button type="button" class="btn btn-sm btn-danger rounded-pill" data-bs-toggle="modal" data-bs-target="#deleteModal-@ticket.Id">
+                                        <a asp-action="Delete"  class="btn btn-sm btn-danger rounded-pill" >
                                             <i class="bi bi-trash"></i> Delete
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
 
-                                <!-- Delete Modal -->
-                                <div class="modal fade" id="deleteModal-@ticket.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@ticket.Id" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content border-0 shadow">
-                                            <div class="modal-header bg-danger text-white">
-                                                <h5 class="modal-title">Confirm Delete</h5>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
-                                                <p>Are you sure you want to delete <strong>@ticket.Title</strong>?</p>
-                                            </div>
-                                            <div class="modal-footer justify-content-center">
-                                                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                                                <form asp-action="Delete" asp-route-id="@ticket.Id" method="post" class="d-inline">
-                                                    @Html.AntiForgeryToken()
-                                                    <button type="submit" class="btn btn-danger rounded-pill px-4">
-                                                        <i class="bi bi-trash-fill me-1"></i> Delete
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                              
                             }
                         </tbody>
                     </table>

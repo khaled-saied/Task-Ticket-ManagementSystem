@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BLL.Exceptions;
 using BLL.Services.Interfaces;
+using DAL.Models;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,8 +27,8 @@ namespace BLL.Services.Classes
         {
             var ticket = await _unitOfWork.GetRepository<Ticket, int>().GetAllActive()
                                            .Include(t=> t.Task)
-                                           .Include(t=> t.Comments)
-                                           .FirstOrDefaultAsync(t => t.Id == id);
+                                           .Include(t => t.Comments.Where(c => !c.IsDeleted))
+                                           .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
             if (ticket == null)
             {
                 throw new NotFoundException($"Ticket with id {id} not found");
@@ -77,10 +78,24 @@ namespace BLL.Services.Classes
             var ticket = await _unitOfWork.GetRepository<Ticket, int>().GetByIdAsync(id);
             if (ticket == null)
                 throw new NotFoundException($"Ticket with id {id} not found");
+
+            var comments = await _unitOfWork.GetRepository<Comment, int>()
+                                            .GetAllActive()
+                                            .Where(c => c.TicketId == id)
+                                            .ToListAsync();
+
+            foreach (var comment in comments)
+            {
+                comment.IsDeleted = true;
+                _unitOfWork.GetRepository<Comment, int>().Update(comment);
+            }
+
             ticket.IsDeleted = true;
             _unitOfWork.GetRepository<Ticket, int>().Update(ticket);
             return await _unitOfWork.SaveChanges() > 0 ? true : false;
         }
+       
+
 
     }
 }

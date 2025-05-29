@@ -1,0 +1,51 @@
+﻿@model CommentDetailsDto
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <h4 class="mb-3 text-danger">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Confirm Deletion
+                    </h4>
+
+                    <p class="lead">Are you sure you want to delete the following comment?</p>
+
+                    <div class="mb-3 text-start">
+                        <p><strong>ID:</strong> @Model.Id</p>
+                        <p><strong>UserName:</strong> @Model.UserName</p>
+                        <p><strong>Posted At:</strong> @Model.CreatedAt.ToString("g")</p>
+                        <p><strong>Content:</strong></p>
+                        <div class="border rounded p-2 bg-light">@Model.Content</div>
+                    </div>
+
+                    <form asp-action="DeleteConfirmed" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="TicketDto.Id" name="TicketDto.Id" />
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <a asp-controller="Ticket" asp-action="Details" asp-route-id="@Model.TicketDto?.Id" class="btn btn-secondary rounded-pill px-4">
+                                No, go back
+                            </a>
+
+                            <button type="submit" class="btn btn-danger rounded-pill px-4">
+                                Yes, delete it
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

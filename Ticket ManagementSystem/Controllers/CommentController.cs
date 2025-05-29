@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BLL.DataTransferObjects.CommentDtos;
+using BLL.DataTransferObjects.TicketDtos;
 using BLL.Services.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -78,6 +79,106 @@ namespace Ticket_ManagementSystem.Controllers
                 }
             }
             return View(commentDto);
+        }
+
+        #endregion
+
+        #region Update
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            ViewBag.TicketId = id;
+            var comment = await _serviceManger.CommentService.GetCommentByIdAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            var commentDto = new UpdateCommentDto
+            {
+                Id = comment.Id,
+                Content = comment.Content,
+            };
+            return View(commentDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UpdateCommentDto commentDto)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    int result = await _serviceManger.CommentService.UpdateCommentAsync(commentDto);
+                    if (result > 0)
+                        return RedirectToAction("Details", "Ticket", new { id = commentDto.Id });
+                    else
+                        ModelState.AddModelError(string.Empty, "Department was not updated");
+                }
+                catch (Exception ex)
+                {
+                    if (_environment.IsDevelopment())
+                    {
+                        //1- Devolpment=> log error in console and return error message to user
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                    else
+                    {
+                        //2-Deployment=> log error in file or database and return  error view,
+                        _logger.LogError(ex.Message);
+                        return View("ErrorView", ex);
+                    }
+
+                }
+            }
+            return View(commentDto);
+        }
+        #endregion
+
+        #region Delete
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id == 0 )
+            {
+                return NotFound();
+            }
+            var comment = await _serviceManger.CommentService.GetCommentByIdAsync(id);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            return View(comment);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(CommentDetailsDto detailsDto)
+        {
+            try 
+            {
+                bool result = await _serviceManger.CommentService.DeleteCommentAsync(detailsDto.Id);
+                if (result)
+                {
+                    return RedirectToAction("Details", "Ticket", new { id = detailsDto.TicketDto.Id });
+                }
+                else
+                {
+                    TempData["Error"] = "Failed to delete comment.";
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_environment.IsDevelopment())
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                else
+                {
+                    _logger.LogError(ex.Message);
+                    return View("ErrorView", ex);
+                }
+            }
+            return View();
         }
 
         #endregion

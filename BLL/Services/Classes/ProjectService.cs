@@ -32,8 +32,8 @@ namespace BLL.Services.Classes
             var project = await _unitOfWork.GetRepository<Project, int>()
                                            .GetAllActive()
                                            .Include(p => p.User)
-                                           .Include(p => p.Tasks)
-                                           .FirstOrDefaultAsync(p => p.Id == id);
+                                           .Include(p => p.Tasks.Where(T => !T.IsDeleted))
+                                           .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
             if (project == null)
             {
                 throw new NotFoundException($"Project with id {id} not found");
@@ -92,9 +92,12 @@ namespace BLL.Services.Classes
                 foreach (var ticket in task.Tickets)
                 {
                     foreach (var comment in ticket.Comments)
+                    {
                         comment.IsDeleted = true;
-
+                        _unitOfWork.GetRepository<Comment, int>().Update(comment);
+                    }
                     ticket.IsDeleted = true;
+                    _unitOfWork.GetRepository<Ticket, int>().Update(ticket);
                 }
 
                 task.IsDeleted = true;

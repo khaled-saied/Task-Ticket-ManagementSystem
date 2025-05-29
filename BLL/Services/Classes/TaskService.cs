@@ -33,8 +33,8 @@ namespace BLL.Services.Classes
             var Task = await _unitOfWork.GetRepository<TaskK, int>()
                 .GetAllActive()
                 .Include(t => t.Project)
-                .Include(t=> t.Tickets)
-                .FirstOrDefaultAsync(t => t.Id == id);
+                .Include(t=> t.Tickets.Where(T=> !T.IsDeleted))
+                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
 
 
             if (Task == null)
@@ -85,9 +85,25 @@ namespace BLL.Services.Classes
         //Delete task
         public async Task<bool> DeleteTask(int id)
         {
-            var Task = await _unitOfWork.GetRepository<TaskK, int>().GetByIdAsync(id);
+            var Task = await _unitOfWork.GetRepository<TaskK, int>()
+                                        .GetAllActive()
+                                        .Include(t => t.Tickets)
+                                            .ThenInclude(t => t.Comments)
+                                        .FirstOrDefaultAsync(t => t.Id == id);
             if (Task == null)
                 throw new NotFoundException($"Task with id {id} not found");
+
+            foreach( var ticket in Task.Tickets)
+            {
+                foreach (var comment in ticket.Comments)
+                {
+                    comment.IsDeleted = true; // Soft delete comments
+                    _unitOfWork.GetRepository<Comment, int>().Update(comment);
+                }
+                ticket.IsDeleted = true; // Soft delete tickets
+                _unitOfWork.GetRepository<Ticket, int>().Update(ticket);
+            }
+
             Task.IsDeleted = true;
             _unitOfWork.GetRepository<TaskK, int>().Update(Task);
             return await _unitOfWork.SaveChanges() > 0 ? true : false;

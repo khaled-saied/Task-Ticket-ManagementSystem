@@ -3,11 +3,13 @@ using BLL.DataTransferObjects.CommentDtos;
 using BLL.DataTransferObjects.TicketDtos;
 using BLL.Services.Interfaces;
 using DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ticket_ManagementSystem.Controllers
 {
+    [Authorize]
     public class CommentController(IServiceManger _serviceManger,
                                    ILogger<CommentController> _logger,
                                    IWebHostEnvironment _environment,
@@ -85,14 +87,18 @@ namespace Ticket_ManagementSystem.Controllers
 
         #region Update
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id,int ticketId)
         {
-            ViewBag.TicketId = id;
+            ViewBag.TicketId = ticketId;
             var comment = await _serviceManger.CommentService.GetCommentByIdAsync(id);
             if (comment == null)
             {
                 return NotFound();
             }
+            var userId = _userManager.GetUserId(User);
+            if (comment.UserId != userId) // Check if the user is the owner of the comment
+                return View("AccessDenied",comment.TicketDto.Id);
+
             var commentDto = new UpdateCommentDto
             {
                 Id = comment.Id,
@@ -102,7 +108,7 @@ namespace Ticket_ManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UpdateCommentDto commentDto)
+        public async Task<IActionResult> Edit(UpdateCommentDto commentDto,int ticketId)
         {
             if (ModelState.IsValid)
             {
@@ -110,7 +116,7 @@ namespace Ticket_ManagementSystem.Controllers
                 {
                     int result = await _serviceManger.CommentService.UpdateCommentAsync(commentDto);
                     if (result > 0)
-                        return RedirectToAction("Details", "Ticket", new { id = commentDto.Id });
+                        return RedirectToAction("Details", "Ticket", new { id = ticketId });
                     else
                         ModelState.AddModelError(string.Empty, "Department was not updated");
                 }
@@ -148,6 +154,10 @@ namespace Ticket_ManagementSystem.Controllers
             {
                 return NotFound();
             }
+            var userId = _userManager.GetUserId(User);
+            if (comment.UserId != userId)// Check if the user is the owner of the comment
+                return View("AccessDenied");
+
             return View(comment);
         }
 

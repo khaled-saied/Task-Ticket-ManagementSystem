@@ -14,6 +14,7 @@ namespace BLL.DataTransferObjects.CommentDtos
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public string UserName { get; set; } = string.Empty;
+        public string UserId { get; set; } = string.Empty;
         public TicketDto? TicketDto { get; set; }
     }
 }

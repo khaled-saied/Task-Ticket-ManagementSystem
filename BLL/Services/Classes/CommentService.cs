@@ -56,14 +56,16 @@ namespace BLL.Services.Classes
 
         public async Task<int> UpdateCommentAsync(UpdateCommentDto commentDto)
         {
-            var comment = _mapper.Map<Comment>(commentDto);
-            var existingComment = await _unitOfWork.GetRepository<Comment, int>().GetByIdAsync(commentDto.Id);
-            if (existingComment == null)
-                throw new NotFoundException($"Comment with id {commentDto.Id} not found");
+            //Validate if User Is who is trying to update the comment is the owner of the comment
+            var commentRepo = _unitOfWork.GetRepository<Comment, int>();
 
-            _mapper.Map(commentDto, existingComment); 
-            _unitOfWork.GetRepository<Comment, int>().Update(existingComment);
-            return await _unitOfWork.SaveChanges();
+            var existingComment = await commentRepo.GetByIdAsync(commentDto.Id)
+                                    ?? throw new NotFoundException($"Comment with id {commentDto.Id} not found");
+
+            _mapper.Map(commentDto, existingComment);
+
+            commentRepo.Update(existingComment);
+            return await _unitOfWork.SaveChanges(); 
         }
 
         public async Task<bool> DeleteCommentAsync(int id)

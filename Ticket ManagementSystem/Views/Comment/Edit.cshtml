@@ -34,7 +34,7 @@
                         <span asp-validation-for="Content" class="text-danger"></span>
 
                         <div class="d-flex justify-content-between mt-3">
-                            <a asp-action="Index" class="btn btn-secondary rounded-pill px-3">
+                            <a asp-action="Details" asp-controller="Ticket" asp-route-id="@ViewBag.TicketId" class="btn btn-secondary rounded-pill px-3">
                                 ← Back
                             </a>
                             <button type="submit" class="btn btn-warning rounded-pill px-4">

@@ -2,6 +2,7 @@
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Ticket_ManagementSystem.Helper;
 using Ticket_ManagementSystem.ViewModels.AccountViewModel;
 
 namespace Ticket_ManagementSystem.Controllers
@@ -109,6 +110,109 @@ namespace Ticket_ManagementSystem.Controllers
         {
             return View();
         }
+        #endregion
+
+        #region ForgetPassword
+        [HttpGet]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgetPassword(ForgetPassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email not found.");
+                    return View(model);
+                }
+                else
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    var resetLink = Url.Action("ResetPassword", "Account", new { token, email = user.Email }, Request.Scheme);
+
+                    // Here you would typically send the reset link via email.
+                    var email = new Email()
+                    {
+                        To = model.Email,
+                        Subject = "Reset Password",
+                        Body = $"Please reset your password by clicking here: <a href='{resetLink}'>Reset Password</a>"
+                    };
+                    // Send email logic goes here, e.g., using an email service.
+                    var flag = EmailSettings.SendEmail(email);
+                    if (flag)
+                    {
+                        //Check Your Inbox
+                        return RedirectToAction("CheckYourInbox");
+                    }
+
+                }
+            }
+            ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
+            return View(model);
+        }
+
+        //Check Your Inbox
+        [HttpGet]
+        public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
+
+        //Reset Password
+        #region Reset Password
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Invalid token or email.");
+            }
+           
+            TempData["Token"] = token;
+            TempData["Email"] = email;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                var token = TempData["Token"] as string;
+                var email = TempData["Email"] as string;
+                if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid token or email.");
+                    return View(model);
+                }
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user is null)
+                {
+                    ModelState.AddModelError(string.Empty, "User not found.");
+                    return View(model);
+                }
+                var result = await _userManager.ResetPasswordAsync(user, token, model.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Login");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            return View(model);
+        }
+
+        #endregion
+
+
         #endregion
     }
 }

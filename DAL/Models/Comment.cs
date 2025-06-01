@@ -16,7 +16,7 @@ namespace DAL.Models
         public string UserId { get; set; } = string.Empty;
 
         // Navigation Properties
-        public Ticket Ticket { get; set; }
-        public ApplicationUser User { get; set; }
+        public virtual Ticket Ticket { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

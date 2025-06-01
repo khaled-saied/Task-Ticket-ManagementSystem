@@ -15,9 +15,9 @@ namespace DAL.Models
         public DateTime DueDate { get; set; } // ✅ New property for due date
 
         public int ProjectId { get; set; } // FK to Project
-        public ICollection<Ticket> Tickets { get; set; } // Navigation property to Ticket
+        public virtual ICollection<Ticket> Tickets { get; set; } // Navigation property to Ticket
 
-        public Project Project { get; set; } // Navigation property to Project
+        public virtual Project Project { get; set; } // Navigation property to Project
 
     }
 }

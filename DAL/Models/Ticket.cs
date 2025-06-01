@@ -17,8 +17,8 @@ namespace DAL.Models
         public int TaskId { get; set; } // FK to Task
 
         //Navigation properties
-        public TaskK Task { get; set; } // Navigation property to Task
-        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual TaskK Task { get; set; } // Navigation property to Task
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     }
 }

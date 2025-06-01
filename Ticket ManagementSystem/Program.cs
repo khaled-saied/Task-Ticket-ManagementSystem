@@ -22,6 +22,7 @@ namespace Ticket_ManagementSystem
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseLazyLoadingProxies();
             });
 
             builder.Services.AddApplicationServices();

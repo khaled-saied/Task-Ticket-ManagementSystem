@@ -11,7 +11,8 @@ namespace BLL.Services.Classes
     public class ServiceMangerWithFactorDelegate(Func<IProjectService> ProjectServiceFactory,
                                                  Func<ITicketService> TicketServiceFactory,
                                                  Func<ITaskService> TaskServiceFactory,
-                                                 Func<ICommentService> CommentServiceFactory) : IServiceManger
+                                                 Func<ICommentService> CommentServiceFactory,
+                                                 Func<IUserService> UserServiceFactory) : IServiceManger
     {
 
         public ICommentService CommentService => CommentServiceFactory.Invoke();
@@ -21,5 +22,6 @@ namespace BLL.Services.Classes
         public IProjectService ProjectService => ProjectServiceFactory.Invoke();
 
         public ITaskService TaskService => TaskServiceFactory.Invoke();
+        public IUserService UserService => UserServiceFactory.Invoke();
     }
 }

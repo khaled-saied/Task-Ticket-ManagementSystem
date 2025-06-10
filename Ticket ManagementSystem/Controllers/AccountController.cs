@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DAL.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Ticket_ManagementSystem.Helper;
@@ -92,6 +94,30 @@ namespace Ticket_ManagementSystem.Controllers
             else
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(model);
+        }
+
+        //Login With Google
+        public IActionResult LoginWithGoolge()
+        {
+            var prop = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("GoogleResponse")
+            };
+            return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+            var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value,
+            });
+            return RedirectToAction("Index", "Home");
         }
 
         #endregion

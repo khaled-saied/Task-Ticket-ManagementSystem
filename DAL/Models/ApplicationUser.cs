@@ -13,8 +13,8 @@ namespace DAL.Models
         public string FullName { get; set; } = string.Empty;
 
         //Navigation properties
-        public ICollection<Project> Projects { get; set; } = new List<Project>();
-        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     }
 }

@@ -1,0 +1,58 @@
+﻿@model UpdateCommentDto
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <h4 class="mb-4 text-warning">
+                        ✏️ Edit Your Comment
+                    </h4>
+
+                    <form asp-action="Edit" asp-route-ticketId="@ViewBag.TicketId" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3 d-flex align-items-start">
+                            <img src="https://ui-avatars.com/api/?name=User&background=FFC107&color=000"
+                                 class="rounded-circle me-3"
+                                 style="width: 50px; height: 50px;" alt="User" />
+
+                            <textarea asp-for="Content"
+                                      class="form-control rounded-4 shadow-sm p-3"
+                                      rows="4"
+                                      placeholder="Update your thoughts..."
+                                      style="resize: none;"></textarea>
+                        </div>
+
+                        <span asp-validation-for="Content" class="text-danger"></span>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <a asp-action="Details" asp-controller="Ticket" asp-route-id="@ViewBag.TicketId" class="btn btn-secondary rounded-pill px-3">
+                                ← Back
+                            </a>
+                            <button type="submit" class="btn btn-warning rounded-pill px-4">
+                                <i class="bi bi-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

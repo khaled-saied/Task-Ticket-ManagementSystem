@@ -1,0 +1,50 @@
+﻿@model TicketDetailsDto
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Delete</h1>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <h4 class="mb-3 text-danger">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Confirm Deletion
+                    </h4>
+
+                    <p class="lead">Are you sure you want to delete the following comment?</p>
+
+                    <div class="mb-3 text-start">
+                        <p><strong>Status:</strong> @Model.Status</p>
+                        <p><strong>Content:</strong></p>
+                        <div class="border rounded p-2 bg-light">@Model.Description</div>
+                    </div>
+
+                    <form asp-action="ConfirmDelete" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Task.Id" name="Task.Id" />
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <a asp-controller="Task" asp-action="Details" asp-route-id="@Model.Task?.Id" class="btn btn-secondary rounded-pill px-4">
+                                No, go back
+                            </a>
+
+                            <button type="submit" class="btn btn-danger rounded-pill px-4">
+                                Yes, delete it
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

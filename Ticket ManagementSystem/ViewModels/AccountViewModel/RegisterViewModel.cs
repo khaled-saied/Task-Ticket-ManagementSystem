@@ -5,12 +5,19 @@ namespace Ticket_ManagementSystem.ViewModels.AccountViewModel
     public class RegisterViewModel
     {
 
-        public string? FullName { get; set; } = string.Empty;
-
         [Required(ErrorMessage = "Full name is required")]
         [Display(Name = "Full Name")]
         [StringLength(100, ErrorMessage = "Full name must be less than 100 characters")]
+        public string FullName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Username is required")]
+        [Display(Name = "Username")]
+        [StringLength(50, ErrorMessage = "Username must be less than 50 characters")]
         public string UserName { get; set; } = string.Empty;
+
+        [Required]
+        [Phone]
+        public string PhoneNumber { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]

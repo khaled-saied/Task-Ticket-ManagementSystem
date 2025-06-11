@@ -37,6 +37,9 @@ namespace BLL
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<Func<ICommentService>>(sp => () => sp.GetRequiredService<ICommentService>());
 
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<Func<IUserService>>(sp => () => sp.GetRequiredService<IUserService>());
+
             return services;
         }
     }

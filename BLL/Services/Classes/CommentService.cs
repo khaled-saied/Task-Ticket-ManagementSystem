@@ -7,12 +7,14 @@ using BLL.DataTransferObjects.CommentDtos;
 using BLL.Exceptions;
 using BLL.Services.Interfaces;
 using DAL.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Classes
 {
     public class CommentService(IUnitOfWork _unitOfWork,
-                                IMapper _mapper) : ICommentService
+                                IMapper _mapper,
+                                UserManager<ApplicationUser> _userManager) : ICommentService
     {
         public async Task<IEnumerable<CommentDto>> GetAllCommentsAsync()
         {
@@ -23,7 +25,11 @@ namespace BLL.Services.Classes
 
         public async Task<CommentDetailsDto> GetCommentByIdAsync(int id)
         {
-            var comment = await _unitOfWork.GetRepository<Comment, int>().GetByIdAsync(id);
+            var comment = await _unitOfWork.GetRepository<Comment, int>()
+                                           .GetAllActive()
+                                           .Include(c => c.Ticket)
+                                           .Include(c => c.User)
+                                           .FirstOrDefaultAsync(c => c.Id == id);
             if (comment == null)
             {
                 throw new NotFoundException($"Comment with id {id} not found");
@@ -32,13 +38,17 @@ namespace BLL.Services.Classes
             return commentDto;
         }
 
-        public async Task<int> CreateCommentAsync(CreateCommentDto commentDto)
+        public async Task<int> CreateCommentAsync(CreateCommentDto commentDto, int TicketId, string UserId)
         {
-            //var existingComment = await _unitOfWork.GetRepository<Comment, int>().GetAllActive().FirstOrDefaultAsync(c => c.Content == commentDto.Content && c.TicketId == commentDto.TicketId);
-            var ticket = await _unitOfWork.GetRepository<Ticket, int>().GetByIdAsync(commentDto.TicketId)
-                        ??throw new NotFoundException($"Ticket with id {commentDto.TicketId} not found");
+            var ticket = await _unitOfWork.GetRepository<Ticket, int>().GetByIdAsync(TicketId)
+                        ??throw new NotFoundException($"Ticket with id {TicketId} not found");
+            var user = await _userManager.FindByIdAsync(UserId) 
+                        ?? throw new NotFoundException($"User with id {UserId} not found");
+
 
             var comment = _mapper.Map<Comment>(commentDto);
+            comment.TicketId = TicketId;
+            comment.UserId = UserId;
             await _unitOfWork.GetRepository<Comment, int>().AddAsync(comment);
             return await _unitOfWork.SaveChanges();
         }
@@ -46,14 +56,16 @@ namespace BLL.Services.Classes
 
         public async Task<int> UpdateCommentAsync(UpdateCommentDto commentDto)
         {
-            var comment = _mapper.Map<Comment>(commentDto);
-            var existingComment = await _unitOfWork.GetRepository<Comment, int>().GetByIdAsync(commentDto.Id);
-            if (existingComment == null)
-                throw new NotFoundException($"Comment with id {commentDto.Id} not found");
+            //Validate if User Is who is trying to update the comment is the owner of the comment
+            var commentRepo = _unitOfWork.GetRepository<Comment, int>();
 
-            _mapper.Map(commentDto, existingComment); 
-            _unitOfWork.GetRepository<Comment, int>().Update(existingComment);
-            return await _unitOfWork.SaveChanges();
+            var existingComment = await commentRepo.GetByIdAsync(commentDto.Id)
+                                    ?? throw new NotFoundException($"Comment with id {commentDto.Id} not found");
+
+            _mapper.Map(commentDto, existingComment);
+
+            commentRepo.Update(existingComment);
+            return await _unitOfWork.SaveChanges(); 
         }
 
         public async Task<bool> DeleteCommentAsync(int id)

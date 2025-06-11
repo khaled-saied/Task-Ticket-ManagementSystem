@@ -26,9 +26,10 @@ namespace DAL.Data.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(c => c.User)
-                .WithMany() 
+                .WithMany(u=> u.Comments) 
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
 
         }
     }

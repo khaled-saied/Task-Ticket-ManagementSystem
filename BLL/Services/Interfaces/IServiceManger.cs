@@ -12,5 +12,6 @@ namespace BLL.Services.Interfaces
         ITicketService TicketService { get; }
         IProjectService ProjectService { get; }
         ITaskService TaskService { get; }
+        IUserService UserService { get; }
     }
 }

@@ -1,0 +1,46 @@
+﻿@model ReturnRoleViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">Edit Role</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm rounded">
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Role Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter role name..." />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+
+                        <div class="d-flex gap-2">
+                            <a asp-action="AddOrRemoveUserRole" asp-route-roleId="@Model.Id" class="btn btn-outline-dark">
+                                <i class="bi bi-people-fill"></i> Add or Remove Users
+                            </a>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save2"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

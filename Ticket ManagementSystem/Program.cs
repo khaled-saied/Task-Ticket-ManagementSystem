@@ -65,7 +65,12 @@ namespace Ticket_ManagementSystem
             //Configure MailSettings
             builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
+            //Configure SmsSettings
+            builder.Services.Configure<SmsSettings>(builder.Configuration.GetSection("Twilio"));
+
             builder.Services.AddScoped<IMailService, MailService>();
+
+            builder.Services.AddScoped<ISmsService, SmsService>();
 
             #endregion
 

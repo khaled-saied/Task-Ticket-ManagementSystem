@@ -12,7 +12,8 @@ namespace Ticket_ManagementSystem.Controllers
 {
     public class AccountController(UserManager<ApplicationUser> _userManager,
                                     SignInManager<ApplicationUser> _signInManager,
-                                    IMailService _mailService) : Controller
+                                    IMailService _mailService,
+                                    ISmsService _smsService) : Controller
     {
 
         #region Register
@@ -37,7 +38,8 @@ namespace Ticket_ManagementSystem.Controllers
                 {
                     UserName = model.UserName,
                     Email = model.Email,
-                    FullName = model.FullName
+                    FullName = model.FullName,
+                    PhoneNumber = model.PhoneNumber 
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -162,14 +164,19 @@ namespace Ticket_ManagementSystem.Controllers
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                    var resetLink = Url.Action("ResetPassword", "Account", new { token, email = user.Email }, Request.Scheme);
+                    var resetLink = Url.Action(nameof(ResetPassword), "Account", new { token, email = user.Email }, Request.Scheme);
 
                     // Here you would typically send the reset link via email.
                     var email = new Email()
                     {
                         To = model.Email,
                         Subject = "Reset Password",
-                        Body = $"Please reset your password by clicking here: <a href='{resetLink}'>Reset Password</a>"
+                        Body = $@"
+                                <p>Hello {user.UserName},</p>
+                                <p>Click the link below to reset your password:</p>
+                                <p><a href='{resetLink}'>Reset your password</a></p>
+                                <p>If you didn't request this, just ignore this email.</p>
+                                <p>Thanks,<br/>Your Support Team</p>"
                     };
                     // Send email logic goes here, e.g., using an email service.
                     #region Old Way
@@ -183,6 +190,57 @@ namespace Ticket_ManagementSystem.Controllers
 
                     _mailService.Send(email);
                     return RedirectToAction("CheckYourInbox");
+
+                }
+            }
+            ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
+            return View(model);
+        }
+
+        // Forget Password With SMS
+        [HttpGet]
+        public IActionResult ForgetPasswordWithSms()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForgetPasswordWithSms(ForgetPassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email not found.");
+                    return View(model);
+                }
+                else
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    var resetLink = Url.Action(nameof(ResetPassword), "Account", new { token, email = user.Email }, Request.Scheme);
+
+                    if(string.IsNullOrEmpty(user.PhoneNumber))
+                    {
+                        ModelState.AddModelError(string.Empty, "Phone number not found.");
+                        return View(model);
+                    }
+                    var Sms = new SmsMessage
+                    {
+                        Body = $@"
+                                Hello {user.UserName},
+                                Click the link below to reset your password:
+                                {resetLink}
+                                If you didn't request this, just ignore this message.
+                                Thanks,
+                                Your Support Team",
+                        PhoneNumber = user.PhoneNumber
+                    };
+
+                    await _smsService.SendSms(Sms);
+                    return Ok("CheckYourInbox");
+                    //var result = await _smsService.SendSms(Sms);
+                    //Console.WriteLine($"SMS Status: {result.Status}");
 
                 }
             }

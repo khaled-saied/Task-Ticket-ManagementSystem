@@ -22,7 +22,7 @@ namespace Ticket_ManagementSystem.Utilities
 
             var builder = new BodyBuilder();
 
-            builder.TextBody = email.Body;
+            builder.HtmlBody = email.Body;
 
             mail.Body = builder.ToMessageBody();
 

@@ -60,6 +60,7 @@ namespace BLL.Services.Classes
                 UserName = user.UserName,
                 FullName = user.FullName,
                 Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 Roles = roles.ToList(),
                 Comments = user.Comments?.Select(c => new CommentDto
                 {

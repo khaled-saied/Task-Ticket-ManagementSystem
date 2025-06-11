@@ -15,6 +15,10 @@ namespace Ticket_ManagementSystem.ViewModels.AccountViewModel
         [StringLength(50, ErrorMessage = "Username must be less than 50 characters")]
         public string UserName { get; set; } = string.Empty;
 
+        [Required]
+        [Phone]
+        public string PhoneNumber { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         [Display(Name = "Email")]

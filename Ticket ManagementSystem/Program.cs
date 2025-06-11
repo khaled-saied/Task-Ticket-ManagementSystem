@@ -7,6 +7,8 @@ using DAL.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Ticket_ManagementSystem.Settings;
+using Ticket_ManagementSystem.Utilities;
 
 namespace Ticket_ManagementSystem
 {
@@ -59,6 +61,11 @@ namespace Ticket_ManagementSystem
                                 op.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
                             });
             #endregion
+
+            //Configure MailSettings
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
+            builder.Services.AddScoped<IMailService, MailService>();
 
             #endregion
 

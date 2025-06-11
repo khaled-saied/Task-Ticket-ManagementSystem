@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Ticket_ManagementSystem.Helper;
+using Ticket_ManagementSystem.Utilities;
 using Ticket_ManagementSystem.ViewModels.AccountViewModel;
 
 namespace Ticket_ManagementSystem.Controllers
 {
     public class AccountController(UserManager<ApplicationUser> _userManager,
-                                    SignInManager<ApplicationUser> _signInManager) : Controller
+                                    SignInManager<ApplicationUser> _signInManager,
+                                    IMailService _mailService) : Controller
     {
 
         #region Register
@@ -170,12 +172,17 @@ namespace Ticket_ManagementSystem.Controllers
                         Body = $"Please reset your password by clicking here: <a href='{resetLink}'>Reset Password</a>"
                     };
                     // Send email logic goes here, e.g., using an email service.
-                    var flag = EmailSettings.SendEmail(email);
-                    if (flag)
-                    {
-                        //Check Your Inbox
-                        return RedirectToAction("CheckYourInbox");
-                    }
+                    #region Old Way
+                    //var flag = EmailSettings.SendEmail(email);
+                    //if (flag)
+                    //{
+                    //    //Check Your Inbox
+                    //    return RedirectToAction("CheckYourInbox");
+                    //}
+                    #endregion
+
+                    _mailService.Send(email);
+                    return RedirectToAction("CheckYourInbox");
 
                 }
             }

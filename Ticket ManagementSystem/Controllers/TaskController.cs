@@ -4,6 +4,7 @@ using BLL.DataTransferObjects.TicketDtos;
 using BLL.Services.Classes;
 using BLL.Services.Interfaces;
 using DAL.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -43,6 +44,7 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Create
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Create(int? projectId, string? returnUrl)
         {
@@ -92,6 +94,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Details
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> Details(int id)
         {
             if (id == 0)
@@ -115,6 +119,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Update
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -171,6 +177,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Delete
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {

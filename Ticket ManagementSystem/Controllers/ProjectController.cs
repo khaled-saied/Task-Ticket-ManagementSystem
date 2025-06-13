@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ticket_ManagementSystem.Controllers
 {
-    //[Authorize(Roles ="Admin")]
-    [Authorize]
     public class ProjectController(IServiceManger _serviceManger,
                                    ILogger<ProjectController> _logger,
                                    IWebHostEnvironment _environment,
@@ -29,6 +27,7 @@ namespace Ticket_ManagementSystem.Controllers
         }
 
         #region Create 
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -78,7 +77,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Update
-
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
@@ -140,7 +140,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Details
-
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
@@ -169,7 +170,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Delete
-
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {

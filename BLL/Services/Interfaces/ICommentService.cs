@@ -15,5 +15,6 @@ namespace BLL.Services.Interfaces
         Task<int> UpdateCommentAsync(UpdateCommentDto commentDto);
         Task<bool> DeleteCommentAsync(int id);
         Count GetCount();
+        IQueryable<CommentDto> GetAllDeletedComments();
     }
 }

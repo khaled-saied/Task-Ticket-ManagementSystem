@@ -11,6 +11,7 @@ namespace DAL.Repositories
         void Update(TEntity entity);
         void DeleteAsync(TKey id);
         Count GetCount();
+        IQueryable<TEntity> GetAllDeleted();
     }
 }
 

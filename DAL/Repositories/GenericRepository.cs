@@ -28,6 +28,12 @@ namespace DAL.Repositories
             };
         }
 
+        //Show deleted items
+        public IQueryable<TEntity> GetAllDeleted()
+        {
+            return _dbContext.Set<TEntity>().Where(e => e.IsDeleted);
+        }
+
         //Get by id
         public async Task<TEntity?> GetByIdAsync(TKey id)
         {

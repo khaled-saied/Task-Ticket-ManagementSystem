@@ -4,7 +4,7 @@ using BLL.Services.Interfaces;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Ticket_ManagementSystem.ViewModels
+namespace Ticket_ManagementSystem.ViewModels.ViewModelOfDashboard
 {
     public class DashboardViewModel
     {

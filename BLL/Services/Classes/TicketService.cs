@@ -17,7 +17,7 @@ namespace BLL.Services.Classes
         //get all tickets
         public async Task<IEnumerable<TicketDto>> GetAllAsync()
         {
-            var tickets= await _unitOfWork.GetRepository<Ticket,int>().GetAllActive().ToListAsync();
+            var tickets = await _unitOfWork.GetRepository<Ticket, int>().GetAllActive().ToListAsync();
             var ticketDtos = _mapper.Map<IEnumerable<TicketDto>>(tickets);
             return ticketDtos;
         }
@@ -26,7 +26,7 @@ namespace BLL.Services.Classes
         public async Task<TicketDetailsDto> GetTicketById(int id)
         {
             var ticket = await _unitOfWork.GetRepository<Ticket, int>().GetAllActive()
-                                           .Include(t=> t.Task)
+                                           .Include(t => t.Task)
                                            .Include(t => t.Comments.Where(c => !c.IsDeleted))
                                            .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
             if (ticket == null)
@@ -66,7 +66,7 @@ namespace BLL.Services.Classes
                 .AnyAsync(t => t.Title == updateTicketDto.Title && t.Id != updateTicketDto.Id);
             if (IfExists)
                 throw new ConflictException($"Ticket with title {updateTicketDto.Title} already exists");
-            _mapper.Map(updateTicketDto,ticket);
+            _mapper.Map(updateTicketDto, ticket);
             _unitOfWork.GetRepository<Ticket, int>().Update(ticket);
             return await _unitOfWork.SaveChanges();
         }
@@ -100,5 +100,12 @@ namespace BLL.Services.Classes
             return _unitOfWork.GetRepository<Ticket, int>().GetCount();
         }
 
+        //Show deleted tickets
+        public async Task<IEnumerable<TicketDto>> GetAllDeletedAsync()
+        {
+            var tickets = await _unitOfWork.GetRepository<Ticket, int>().GetAllDeleted().ToListAsync();
+            var ticketDtos = _mapper.Map<IEnumerable<TicketDto>>(tickets);
+            return ticketDtos;
+        }
     }
 }

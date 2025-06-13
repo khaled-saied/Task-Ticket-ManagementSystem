@@ -1,4 +1,5 @@
-﻿@model DashboardViewModel
+﻿@using Ticket_ManagementSystem.ViewModels.ViewModelOfDashboard
+@model DashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -6,9 +7,8 @@
 }
 
 <div class="container-fluid">
-    <!--  -->
+    <!-- الإحصائيات -->
     <div class="row mb-4">
-        @* Users *@
         <div class="col-md-4">
             <div class="card text-white bg-primary shadow-sm mb-3">
                 <div class="card-body">
@@ -17,8 +17,6 @@
                 </div>
             </div>
         </div>
-
-        @* Roles *@
         <div class="col-md-4">
             <div class="card text-white bg-secondary shadow-sm mb-3">
                 <div class="card-body">
@@ -27,8 +25,6 @@
                 </div>
             </div>
         </div>
-
-        @* Comments *@
         <div class="col-md-4">
             <div class="card text-white bg-dark shadow-sm mb-3">
                 <div class="card-body">
@@ -40,7 +36,6 @@
     </div>
 
     <div class="row mb-4">
-        @* Projects *@
         <div class="col-md-4">
             <div class="card text-white bg-info shadow-sm mb-3">
                 <div class="card-body">
@@ -49,8 +44,6 @@
                 </div>
             </div>
         </div>
-
-        @* Tasks *@
         <div class="col-md-4">
             <div class="card text-white bg-success shadow-sm mb-3">
                 <div class="card-body">
@@ -59,8 +52,6 @@
                 </div>
             </div>
         </div>
-
-        @* Tickets *@
         <div class="col-md-4">
             <div class="card text-white bg-warning shadow-sm mb-3">
                 <div class="card-body">
@@ -73,7 +64,6 @@
 
     <!-- الرسوم البيانية -->
     <div class="row mt-5">
-        <!-- Ticket Chart -->
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header fw-bold">Ticket Distribution</div>
@@ -82,8 +72,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Task Chart -->
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header fw-bold">Task Distribution</div>
@@ -93,48 +81,149 @@
             </div>
         </div>
     </div>
+
+    <!-- التذاكر -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header fw-bold">Recent Tickets</div>
+                <div class="card-body">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ticket in Model.TicketDtos.Take(5))
+                            {
+                                <tr>
+                                    <td>@ticket.Id</td>
+                                    <td>@ticket.Title</td>
+                                    <td>
+                                        <span class="badge bg-@GetTicketBadge(ticket.Status)">
+                                            @ticket.Status
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- المهام -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header fw-bold">Recent Tasks</div>
+                <div class="card-body">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Due Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var task in Model.TaskDtos.Take(5))
+                            {
+                                <tr>
+                                    <td>@task.Id</td>
+                                    <td>@task.Title</td>
+                                    <td>
+                                        <span class="badge bg-@GetTaskBadge(task.Status)">
+                                            @task.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @task.DueDate.ToShortDateString()
+                                        @if (task.IsOverdue)
+                                        {
+                                            <span class="badge bg-danger ms-2">Overdue</span>
+                                        }
+                                        else if (task.IsDueSoon)
+                                        {
+                                            <span class="badge bg-warning text-dark ms-2">Due Soon</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@functions {
+    string GetTicketBadge(string status)
+    {
+        return status switch
+        {
+            "Open" => "warning",
+            "InReview" => "info",
+            "Resolved" => "primary",
+            "Closed" => "success",
+            _ => "secondary"
+        };
+    }
+
+    string GetTaskBadge(string status)
+    {
+        return status switch
+        {
+            "New" => "secondary",
+            "ToDo" => "warning",
+            "InProgress" => "info",
+            "Done" => "success",
+            "Blocked" => "danger",
+            _ => "secondary"
+        };
+    }
+}
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        // ✅ Ticket Chart
         const ticketChart = new Chart(document.getElementById('ticketChart'), {
             type: 'doughnut',
             data: {
                 labels: ['Active', 'Deleted'],
                 datasets: [{
                     data: [@Model.CountOfTicket, @Model.CountOfAllTicket - @Model.CountOfTicket],
-                    backgroundColor: ['#ffc107', '#e2e3e5'], // Yellow, Grey
+                    backgroundColor: ['#ffc107', '#e2e3e5'],
                     borderWidth: 1
                 }]
             },
             options: {
                 plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
+                    legend: { position: 'bottom' }
                 }
             }
         });
 
-        // ✅ Task Chart
         const taskChart = new Chart(document.getElementById('taskChart'), {
             type: 'doughnut',
             data: {
                 labels: ['Active', 'Deleted'],
                 datasets: [{
                     data: [@Model.CountOfTask, @Model.CountOfAllTask - @Model.CountOfTask],
-                    backgroundColor: ['#198754', '#e2e3e5'], // Green, Grey
+                    backgroundColor: ['#198754', '#e2e3e5'],
                     borderWidth: 1
                 }]
             },
             options: {
                 plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
+                    legend: { position: 'bottom' }
                 }
             }
         });

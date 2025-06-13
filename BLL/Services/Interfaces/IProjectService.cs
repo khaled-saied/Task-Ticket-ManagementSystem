@@ -18,5 +18,6 @@ namespace BLL.Services.Interfaces
 
         Task<int> UpdateProject(UpdateProjectDto updateProjectDto);
         Task<bool> DeleteProject(int id);
+        IQueryable<ProjectDto> GetAllDeletedProjects();
     }
 }

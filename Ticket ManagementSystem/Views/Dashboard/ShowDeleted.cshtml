@@ -1,0 +1,180 @@
+﻿@using Ticket_ManagementSystem.ViewModels.ViewModelOfDashboard
+@model DeletedItemViewModel
+@{
+    ViewData["Title"] = "ShowDeleted";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">🗑️ Deleted Items Overview</h2>
+
+    <!-- Deleted Projects -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">Deleted Projects</div>
+        <div class="card-body">
+            @if (!Model.projectDtos.Any())
+            {
+                <p class="text-muted">No deleted projects found.</p>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var project in Model.projectDtos)
+                        {
+                            <tr>
+                                <td>@project.Id</td>
+                                <td>@project.Name</td>
+                                <td>@project.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <!-- Deleted Tasks -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white fw-bold">Deleted Tasks</div>
+        <div class="card-body">
+            @if (!Model.taskDtos.Any())
+            {
+                <p class="text-muted">No deleted tasks found.</p>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var task in Model.taskDtos)
+                        {
+                            <tr>
+                                <td>@task.Id</td>
+                                <td>@task.Title</td>
+                                <td><span class="badge bg-@GetTaskBadge(task.Status)">@task.Status</span></td>
+                                <td>
+                                    @task.DueDate.ToShortDateString()
+                                    @if (task.IsOverdue)
+                                    {
+                                        <span class="badge bg-danger ms-1">Overdue</span>
+                                    }
+                                    else if (task.IsDueSoon)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">Due Soon</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <!-- Deleted Tickets -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning fw-bold">Deleted Tickets</div>
+        <div class="card-body">
+            @if (!Model.ticketDtos.Any())
+            {
+                <p class="text-muted">No deleted tickets found.</p>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ticket in Model.ticketDtos)
+                        {
+                            <tr>
+                                <td>@ticket.Id</td>
+                                <td>@ticket.Title</td>
+                                <td><span class="badge bg-@GetTicketBadge(ticket.Status)">@ticket.Status</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <!-- Deleted Comments -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-danger text-white fw-bold">Deleted Comments</div>
+        <div class="card-body">
+            @if (!Model.commentDtos.Any())
+            {
+                <p class="text-muted">No deleted comments found.</p>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Content</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var comment in Model.commentDtos)
+                        {
+                            <tr>
+                                <td>@comment.Id</td>
+                                <td>@comment.Content</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetTaskBadge(string status)
+    {
+        return status switch
+        {
+            "New" => "secondary",
+            "ToDo" => "warning",
+            "InProgress" => "info",
+            "Done" => "success",
+            "Blocked" => "danger",
+            _ => "secondary"
+        };
+    }
+
+    string GetTicketBadge(string status)
+    {
+        return status switch
+        {
+            "Open" => "warning",
+            "InReview" => "info",
+            "Resolved" => "primary",
+            "Closed" => "success",
+            _ => "secondary"
+        };
+    }
+}

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Ticket_ManagementSystem.ViewModels;
+using Ticket_ManagementSystem.ViewModels.ViewModelOfDashboard;
 
 namespace Ticket_ManagementSystem.Controllers
 {
@@ -49,5 +50,22 @@ namespace Ticket_ManagementSystem.Controllers
             };
             return View(Data);
         }
+
+        public async Task<IActionResult> ShowDeleted()
+        {
+            var taskDtos = await _serviceManger.TaskService.GetAllDeletedTasks();
+            var ticketDtos = await _serviceManger.TicketService.GetAllDeletedAsync();
+
+            var Data = new DeletedItemViewModel()
+            {
+                projectDtos = _serviceManger.ProjectService.GetAllDeletedProjects(),
+                taskDtos = taskDtos,
+                ticketDtos = ticketDtos,
+                commentDtos = _serviceManger.CommentService.GetAllDeletedComments()
+            };
+
+            return View(Data);
+        }
+
     }
 }

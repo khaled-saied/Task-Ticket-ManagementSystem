@@ -41,8 +41,8 @@ namespace BLL.Services.Classes
         public async Task<int> CreateCommentAsync(CreateCommentDto commentDto, int TicketId, string UserId)
         {
             var ticket = await _unitOfWork.GetRepository<Ticket, int>().GetByIdAsync(TicketId)
-                        ??throw new NotFoundException($"Ticket with id {TicketId} not found");
-            var user = await _userManager.FindByIdAsync(UserId) 
+                        ?? throw new NotFoundException($"Ticket with id {TicketId} not found");
+            var user = await _userManager.FindByIdAsync(UserId)
                         ?? throw new NotFoundException($"User with id {UserId} not found");
 
 
@@ -65,19 +65,19 @@ namespace BLL.Services.Classes
             _mapper.Map(commentDto, existingComment);
 
             commentRepo.Update(existingComment);
-            return await _unitOfWork.SaveChanges(); 
+            return await _unitOfWork.SaveChanges();
         }
 
         public async Task<bool> DeleteCommentAsync(int id)
         {
-            var comment = await _unitOfWork.GetRepository<Comment, int>().GetAllActive().FirstOrDefaultAsync(c=> c.Id == id);
+            var comment = await _unitOfWork.GetRepository<Comment, int>().GetAllActive().FirstOrDefaultAsync(c => c.Id == id);
             if (comment == null)
             {
                 throw new NotFoundException($"Comment with id {id} not found");
             }
             comment.IsDeleted = true;
             _unitOfWork.GetRepository<Comment, int>().Update(comment);
-            return await _unitOfWork.SaveChanges() >0 ? true : false;
+            return await _unitOfWork.SaveChanges() > 0 ? true : false;
         }
 
         public Count GetCount()
@@ -85,5 +85,10 @@ namespace BLL.Services.Classes
             return _unitOfWork.GetRepository<Comment, int>().GetCount();
         }
 
+        // Show deleted comments
+        public IQueryable<CommentDto> GetAllDeletedComments()
+        {
+            return _unitOfWork.GetRepository<Comment, int>().GetAllDeleted().Select(C=> _mapper.Map<CommentDto>(C));
+        }
     }
 }

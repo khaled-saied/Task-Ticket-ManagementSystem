@@ -18,7 +18,7 @@ namespace BLL.Services.Classes
         //Get all tasks
         public async Task<IEnumerable<TaskDto>> GetAllTasks()
         {
-            var Tasks = await _unitOfWork.GetRepository<TaskK,int>().GetAllActive().ToListAsync();
+            var Tasks = await _unitOfWork.GetRepository<TaskK, int>().GetAllActive().ToListAsync();
             var TaskDtos = _mapper.Map<IEnumerable<TaskDto>>(Tasks);
             foreach (var task in TaskDtos)
             {
@@ -33,7 +33,7 @@ namespace BLL.Services.Classes
             var Task = await _unitOfWork.GetRepository<TaskK, int>()
                 .GetAllActive()
                 .Include(t => t.Project)
-                .Include(t=> t.Tickets.Where(T=> !T.IsDeleted))
+                .Include(t => t.Tickets.Where(T => !T.IsDeleted))
                 .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
 
 
@@ -57,14 +57,14 @@ namespace BLL.Services.Classes
             var project = await _unitOfWork.GetRepository<Project, int>().GetByIdAsync(createTaskDto.ProjectId);
             if (project == null)
                 throw new NotFoundException($"Project with id {createTaskDto.ProjectId} not found");
-            var Task= _mapper.Map<CreateTaskDto, TaskK>(createTaskDto);
+            var Task = _mapper.Map<CreateTaskDto, TaskK>(createTaskDto);
 
             Task.Status = TaskStatusEnum.New;
             var isExist = await _unitOfWork.GetRepository<TaskK, int>().GetAllActive()
                 .AnyAsync(t => t.Title == createTaskDto.Title && t.ProjectId == createTaskDto.ProjectId);
             if (isExist)
                 throw new ConflictException("Task with the same title already exists in this project.");
-     
+
             await _unitOfWork.GetRepository<TaskK, int>().AddAsync(Task);
             return await _unitOfWork.SaveChanges();
         }
@@ -93,7 +93,7 @@ namespace BLL.Services.Classes
             if (Task == null)
                 throw new NotFoundException($"Task with id {id} not found");
 
-            foreach( var ticket in Task.Tickets)
+            foreach (var ticket in Task.Tickets)
             {
                 foreach (var comment in ticket.Comments)
                 {
@@ -131,5 +131,12 @@ namespace BLL.Services.Classes
             return _unitOfWork.GetRepository<TaskK, int>().GetCount();
         }
 
+        // Show deleted tasks
+        public async Task<IEnumerable<TaskDto>> GetAllDeletedTasks()
+        {
+            var deletedTasks = await _unitOfWork.GetRepository<TaskK, int>().GetAllDeleted().ToListAsync();
+            return _mapper.Map<IEnumerable<TaskDto>>(deletedTasks);
+
+        }
     }
 }

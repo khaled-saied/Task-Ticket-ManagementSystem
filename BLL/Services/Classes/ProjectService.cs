@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Classes
 {
-    
+
     public class ProjectService(IUnitOfWork _unitOfWork,
                                 IMapper _mapper,
                                 UserManager<ApplicationUser> _userManager) : IProjectService
@@ -22,7 +22,7 @@ namespace BLL.Services.Classes
         public async Task<IEnumerable<ProjectDto>> GetAllProjects()
         {
             var projectsQuery = _unitOfWork.GetRepository<Project, int>().GetAllActive();
-            var projects = await projectsQuery.ToListAsync(); 
+            var projects = await projectsQuery.ToListAsync();
             var projectDtos = _mapper.Map<IEnumerable<ProjectDto>>(projects);
             return projectDtos;
         }
@@ -46,7 +46,7 @@ namespace BLL.Services.Classes
         }
 
         //Create project
-        public async Task<int> CreateProject(CreateProjectDto createProjectDto,ApplicationUser User)
+        public async Task<int> CreateProject(CreateProjectDto createProjectDto, ApplicationUser User)
         {
             var Project = _mapper.Map<Project>(createProjectDto);
             Project.UserId = User.Id;
@@ -115,6 +115,13 @@ namespace BLL.Services.Classes
         public Count GetCount()
         {
             return _unitOfWork.GetRepository<Project, int>().GetCount();
+        }
+
+        // Show deleted projects
+        public IQueryable<ProjectDto> GetAllDeletedProjects()
+        {
+            var deletedProjects = _unitOfWork.GetRepository<Project, int>().GetAllDeleted();
+            return deletedProjects.Select(p => _mapper.Map<ProjectDto>(p));
         }
     }
 }

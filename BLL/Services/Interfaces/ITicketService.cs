@@ -15,5 +15,6 @@ namespace BLL.Services.Interfaces
         Task<int> UpdateTicket(UpdateTicketDto updateTicketDto);
         Task<bool> DeleteTicket(int id);
         Count GetCount();
+        Task<IEnumerable<TicketDto>> GetAllDeletedAsync();
     }
 }

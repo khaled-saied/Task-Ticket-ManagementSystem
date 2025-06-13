@@ -94,8 +94,11 @@ namespace BLL.Services.Classes
             _unitOfWork.GetRepository<Ticket, int>().Update(ticket);
             return await _unitOfWork.SaveChanges() > 0 ? true : false;
         }
-       
 
+        public Count GetCount()
+        {
+            return _unitOfWork.GetRepository<Ticket, int>().GetCount();
+        }
 
     }
 }

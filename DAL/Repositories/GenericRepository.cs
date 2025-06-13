@@ -1,4 +1,5 @@
-﻿using DAL.Data.DbContexts;
+﻿using System.Threading.Tasks;
+using DAL.Data.DbContexts;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,16 @@ namespace DAL.Repositories
         public IQueryable<TEntity> GetAllActive()
         {
             return _dbContext.Set<TEntity>().Where(e => !e.IsDeleted);
+        }
+
+        //Count
+        public Count GetCount()
+        {
+            return new Count()
+            {
+                CountNow = GetAllActive().Count(),
+                TotalCount = GetAllAsync().Result.Count()
+            };
         }
 
         //Get by id

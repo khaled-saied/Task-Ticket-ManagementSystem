@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BLL.Exceptions;
 using BLL.Services.Interfaces;
+using DAL.Models;
 using DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,8 @@ namespace BLL.Services.Classes
             var projectDtos = _mapper.Map<IEnumerable<ProjectDto>>(projects);
             return projectDtos;
         }
+
+
 
         //Get project by id
         public async Task<ProjectDetailsDto> GetProjectById(int id)
@@ -109,5 +112,9 @@ namespace BLL.Services.Classes
             return await _unitOfWork.SaveChanges() > 0;
         }
 
+        public Count GetCount()
+        {
+            return _unitOfWork.GetRepository<Project, int>().GetCount();
+        }
     }
 }

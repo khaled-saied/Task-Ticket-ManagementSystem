@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Repositories;
 
 namespace BLL.Services.Interfaces
 {
@@ -10,6 +11,7 @@ namespace BLL.Services.Interfaces
     {
         Task<IEnumerable<ProjectDto>> GetAllProjects();
 
+        Count GetCount();
         Task<ProjectDetailsDto> GetProjectById(int id);
 
         Task<int> CreateProject(CreateProjectDto createProjectDto, ApplicationUser User);

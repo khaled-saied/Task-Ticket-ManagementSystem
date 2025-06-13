@@ -125,5 +125,11 @@ namespace BLL.Services.Classes
             }
         }
 
+
+        public Count GetCount()
+        {
+            return _unitOfWork.GetRepository<TaskK, int>().GetCount();
+        }
+
     }
 }

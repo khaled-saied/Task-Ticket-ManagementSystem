@@ -80,5 +80,10 @@ namespace BLL.Services.Classes
             return await _unitOfWork.SaveChanges() >0 ? true : false;
         }
 
+        public Count GetCount()
+        {
+            return _unitOfWork.GetRepository<Comment, int>().GetCount();
+        }
+
     }
 }

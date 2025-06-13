@@ -34,6 +34,12 @@ namespace Ticket_ManagementSystem.Controllers
             {
                 return NotFound();
             }
+
+            if (User.IsInRole("Admin"))
+                ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+            else
+                ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
+
             return View(comment);
         }
         #endregion
@@ -43,6 +49,11 @@ namespace Ticket_ManagementSystem.Controllers
         public IActionResult Create(int ticketId)
         {
             ViewBag.TicketId = ticketId;
+
+            if (User.IsInRole("Admin"))
+                ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+            else
+                ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
             return View();
         }
 
@@ -87,7 +98,7 @@ namespace Ticket_ManagementSystem.Controllers
 
         #region Update
         [HttpGet]
-        public async Task<IActionResult> Edit(int id,int ticketId)
+        public async Task<IActionResult> Edit(int id, int ticketId)
         {
             ViewBag.TicketId = ticketId;
             var comment = await _serviceManger.CommentService.GetCommentByIdAsync(id);
@@ -96,15 +107,22 @@ namespace Ticket_ManagementSystem.Controllers
                 return NotFound();
             }
             var userId = _userManager.GetUserId(User);
-            if (comment.UserId != userId) // Check if the user is the owner of the comment
-                return View("AccessDenied",comment.TicketDto.Id);
-
-            var commentDto = new UpdateCommentDto
+            if (comment.UserId == userId || User.IsInRole("SuperAdmin")) // Check if the user is the owner of the comment
             {
-                Id = comment.Id,
-                Content = comment.Content,
-            };
-            return View(commentDto);
+                var commentDto = new UpdateCommentDto
+                {
+                    Id = comment.Id,
+                    Content = comment.Content,
+                };
+                if (User.IsInRole("Admin"))
+                    ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+                else
+                    ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
+
+                return View(commentDto);
+            }
+            else
+              return View("AccessDenied", comment.TicketDto.Id);
         }
 
         [HttpPost]
@@ -157,6 +175,12 @@ namespace Ticket_ManagementSystem.Controllers
             var userId = _userManager.GetUserId(User);
             if (comment.UserId != userId)// Check if the user is the owner of the comment
                 return View("AccessDenied");
+
+            // Check if the user is an admin
+            if (User.IsInRole("Admin"))
+                ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+            else
+                ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
 
             return View(comment);
         }

@@ -21,12 +21,24 @@ namespace Ticket_ManagementSystem.Controllers
         public async Task<IActionResult> Index()
         {
             var Projects = await _serviceManger.ProjectService.GetAllProjects();
+            if (User.IsInRole("Admin"))
+                ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+            else
+                ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
             return View(Projects);
         }
 
         #region Create 
         [HttpGet]
-        public IActionResult Create() => View();
+        public IActionResult Create()
+        {
+            if (User.IsInRole("Admin"))
+                ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+            else
+                ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
+
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateProjectDto createProjectDto)
@@ -84,6 +96,11 @@ namespace Ticket_ManagementSystem.Controllers
                     Description = project.Description
                 };
 
+                if (User.IsInRole("Admin"))
+                    ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+                else
+                    ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
+
                 return View(updateDto);
             }
             catch (Exception ex)
@@ -134,6 +151,12 @@ namespace Ticket_ManagementSystem.Controllers
                 {
                     throw new NotFoundException("Project not found");
                 }
+
+                if (User.IsInRole("Admin"))
+                    ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+                else
+                    ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
+
                 return View(project);
             }
             catch (Exception ex)

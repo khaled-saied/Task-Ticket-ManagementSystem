@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = ViewBag.Layout as string;
 }
 
 <div class="container mt-5">
@@ -38,6 +38,7 @@
                             <button type="submit" class="btn btn-primary rounded-pill px-4 py-2">
                                 <i class="bi bi-send"></i> Post Comment
                             </button>
+                            <a asp-action="Index" asp-controller="Comment" class="btn btn-secondary">← Back to Comments</a>
                         </div>
                     </form>
 

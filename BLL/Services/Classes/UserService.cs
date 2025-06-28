@@ -38,9 +38,9 @@ namespace BLL.Services.Classes
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    FullName = user.FullName,
                     Email = user.Email,
-                    Roles = roles.ToList()
+                    Roles = roles.ToList(),
+                    ImageName = user.ImageName
                 });
             }
 

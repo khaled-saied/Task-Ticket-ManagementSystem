@@ -17,12 +17,12 @@
     </div>
 </form>
 
-<table class="table table-hover text-center table-bordered">
+<table class="table table-hover text-center table-bordered align-middle">
     <thead class="table-dark">
         <tr>
             <th>#</th>
+            <th>Image</th>
             <th>User Name</th>
-            <th>Full Name</th>
             <th>Email</th>
             <th>Roles</th>
             <th>Actions</th>
@@ -36,8 +36,17 @@
             {
                 <tr>
                     <td>@i</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(user.ImageName))
+                        {
+                            <img src="~/Files/Images/@user.ImageName" alt="User Image" class="rounded-circle" style="width: 70px; height: 70px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">No Image</span>
+                        }
+                    </td>
                     <td>@user.UserName</td>
-                    <td>@user.FullName</td>
                     <td>@user.Email</td>
                     <td>
                         @if (user.Roles != null && user.Roles.Any())
@@ -59,7 +68,6 @@
                         <a class="btn btn-sm btn-warning me-1" asp-action="Edit" asp-route-id="@user.Id">
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
-                        <!-- Delete Button Trigger -->
                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-userid="@user.Id">
                             <i class="bi bi-trash"></i> Delete
                         </button>
@@ -71,7 +79,7 @@
         else
         {
             <tr>
-                <td colspan="6" class="text-center text-muted">No users found.</td>
+                <td colspan="7" class="text-center text-muted">No users found.</td>
             </tr>
         }
     </tbody>

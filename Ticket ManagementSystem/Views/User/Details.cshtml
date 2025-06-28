@@ -2,10 +2,6 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-
-    var imageUrl = string.IsNullOrEmpty(Model.ImageName)
-        ? Url.Content("~/Files/Images/staticImage.jpeg")
-        : Url.Content($"~/Files/Images/{Model.ImageName}");
 }
 
 <div class="container mt-4">
@@ -17,7 +13,7 @@
 
             <!-- User Image -->
             <div class="text-center mb-4">
-                <img src="@imageUrl"
+                <img src="~/Files/Images/@Model.ImageName"
                      class="rounded-circle border border-2"
                      alt="User Image"
                      style="width: 150px; height: 150px; object-fit: cover;" />

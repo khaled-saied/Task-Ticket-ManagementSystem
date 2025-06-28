@@ -12,7 +12,8 @@ namespace BLL.Profiles
             CreateMap<UpdateCommentDto, Comment>().ReverseMap();
 
             // Comment → CommentDto (عرض بسيط)
-            CreateMap<Comment, CommentDto>();
+            CreateMap<Comment, CommentDto>()
+                .ForMember(dest => dest.ImageName, opt => opt.MapFrom(src => !string.IsNullOrEmpty(src.User.ImageName) ? src.User.ImageName: "staticImage.jpeg"));
 
             // Comment → CommentDetailsDto
             CreateMap<Comment, CommentDetailsDto>()

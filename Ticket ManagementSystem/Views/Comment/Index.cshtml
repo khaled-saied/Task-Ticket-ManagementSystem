@@ -21,23 +21,26 @@
                 <div class="col">
                     <div class="card h-100 shadow-sm border-0">
                         <div class="card-body">
-                            <h5 class="card-title text-primary">#@comment.Id</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="~/Files/Images/@comment.ImageName" alt="User Image"
+                                     class="rounded-circle me-3 border" style="width: 50px; height: 50px; object-fit: cover;" />
+                                <h5 class="mb-0 text-primary">#@comment.Id</h5>
+                            </div>
                             <p class="card-text">@comment.Content</p>
                         </div>
                         <div class="card-footer bg-white border-top-0 d-flex justify-content-end gap-2">
                             <a asp-action="Details" asp-route-id="@comment.Id" class="btn btn-sm btn-info text-white">
                                 <i class="bi bi-eye"></i> Details
                             </a>
-                            <a asp-action="Edit" asp-route-id="@comment.Id" class="btn btn-sm btn-warning">
+                            <a asp-action="Edit" asp-route-id="@comment.Id" class="btn btn-sm btn-warning text-white">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </a>
-                            <a asp-action="Delete" asp-route-id="@comment.Id" class="btn btn-sm btn-warning">
-                                <i class="bi bi-trash"></i> Delete 
+                            <a asp-action="Delete" asp-route-id="@comment.Id" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Delete
                             </a>
                         </div>
                     </div>
                 </div>
-
             }
         </div>
     }

@@ -1,6 +1,49 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>@ViewData["Title"]</h1>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container py-5">
+    <div class="bg-dark text-white p-5 rounded shadow-sm">
+        <h1 class="mb-4"><i class="fas fa-user-shield me-2"></i>@ViewData["Title"]</h1>
+
+        <p class="lead mb-3">
+            Your privacy is important to us. This page outlines how we handle and protect your personal data across this platform.
+        </p>
+
+        <ul class="list-unstyled fs-5">
+            <li><i class="fas fa-lock text-success me-2"></i>We do not sell or share your data with third parties.</li>
+            <li><i class="fas fa-database text-warning me-2"></i>All data is securely stored and encrypted.</li>
+            <li><i class="fas fa-user-secret text-info me-2"></i>Only authorized personnel can access your data.</li>
+        </ul>
+
+        <hr class="my-5" />
+
+        <div class="row">
+            <div class="col-md-6">
+                <h4 class="mb-3"><i class="fas fa-user-cog me-2"></i>Developer Contact</h4>
+                <div class="card bg-secondary text-white border-0 shadow">
+                    <div class="card-body">
+                        <p class="mb-2"><i class="fas fa-user me-2"></i><strong>Telegram:</strong> <a href="https://t.me/KhaledSaeidd" class="text-white text-decoration-underline" target="_blank">KhaledSaeidd</a></p>
+                        <p class="mb-2"><i class="fas fa-envelope me-2"></i><strong>Email:</strong> <a href="mailto:KhaledSaied080@gmail.com" class="text-white text-decoration-underline">KhaledSaied080@gmail.com</a></p>
+                        <p class="mb-2"><i class="fas fa-phone me-2"></i><strong>Phone:</strong> <a href="tel:+20113739658" class="text-white text-decoration-underline">0113739658</a></p>
+                        <p><i class="fab fa-whatsapp me-2 text-success"></i><strong>WhatsApp:</strong> <a href="https://wa.me/20113739658" target="_blank" class="text-white text-decoration-underline">Chat on WhatsApp</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mt-4 mt-md-0">
+                <h4 class="mb-3"><i class="fas fa-code me-2"></i>About the Developer</h4>
+                <div class="bg-dark border border-light rounded p-3">
+                    <p class="mb-0">
+                        Passionate full-stack developer with expertise in ASP.NET Core, C#, and modern front-end tech.
+                        I build clean, scalable, and performance-driven applications.<br />
+                        Need something done right? <strong>Hit me up!</strong> 🔥
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

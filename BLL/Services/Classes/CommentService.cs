@@ -18,7 +18,9 @@ namespace BLL.Services.Classes
     {
         public async Task<IEnumerable<CommentDto>> GetAllCommentsAsync()
         {
-            var comments = await _unitOfWork.GetRepository<Comment, int>().GetAllActive().ToListAsync();
+            var comments = await _unitOfWork.GetRepository<Comment, int>().GetAllActive()
+                                            .Include(c=> c.User)
+                                            .ToListAsync();
             var commentDto = _mapper.Map<IEnumerable<CommentDto>>(comments);
             return commentDto;
         }

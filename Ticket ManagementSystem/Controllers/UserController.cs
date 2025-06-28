@@ -51,7 +51,9 @@ namespace Ticket_ManagementSystem.Controllers
                 Id = user.Id,
                 UserName = user.UserName,
                 FullName = user.FullName,
-                Email = user.Email
+                Email = user.Email,
+                ImageName = user.ImageName,
+                ConcurrencyStamp = user.ConcurrencyStamp,
             };
             return View(userDto);
         }
@@ -68,7 +70,7 @@ namespace Ticket_ManagementSystem.Controllers
                         ModelState.AddModelError(string.Empty, "User not found.");
 
                     var result = await _serviceManger.UserService.UpdateUserAsync(updateUser);
-                    if (result > 0) return RedirectToAction("Index");
+                    if (result > 0) return RedirectToAction("Index", "User");
 
                     ModelState.AddModelError(string.Empty, "Failed to update user. Please try again.");
                 }

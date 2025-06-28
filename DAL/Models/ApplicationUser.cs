@@ -12,6 +12,8 @@ namespace DAL.Models
         //FullName
         public string FullName { get; set; } = string.Empty;
 
+        public string? ImageName { get; set; } = string.Empty;
+
         //Navigation properties
         public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
         public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();

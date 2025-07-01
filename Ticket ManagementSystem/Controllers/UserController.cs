@@ -22,7 +22,7 @@ namespace Ticket_ManagementSystem.Controllers
 
         #region Details
         [HttpGet]
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string id, string? returnTo)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -30,14 +30,14 @@ namespace Ticket_ManagementSystem.Controllers
             }
 
             var userDetails = await _serviceManger.UserService.GetUserDetailsAsync(id);
-
+            ViewBag.ReturnTo = returnTo;
             return View(userDetails);
         }
         #endregion
 
         #region Edit
         [HttpGet]
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string id, string? returnTo)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -55,10 +55,11 @@ namespace Ticket_ManagementSystem.Controllers
                 ImageName = user.ImageName,
                 ConcurrencyStamp = user.ConcurrencyStamp,
             };
+            ViewBag.ReturnTo = returnTo;
             return View(userDto);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(UpdateUserDto updateUser)
+        public async Task<IActionResult> Edit(UpdateUserDto updateUser, string? returnTo)
         {
 
             if (ModelState.IsValid)
@@ -70,7 +71,12 @@ namespace Ticket_ManagementSystem.Controllers
                         ModelState.AddModelError(string.Empty, "User not found.");
 
                     var result = await _serviceManger.UserService.UpdateUserAsync(updateUser);
-                    if (result > 0) return RedirectToAction("Index", "User");
+                    if (result > 0) {
+                        if (!string.IsNullOrEmpty(returnTo))
+                            return RedirectToAction("Details", new { id = updateUser.Id, returnTo = returnTo });
+
+                        return RedirectToAction("Details", new { id = updateUser.Id });
+                    }
 
                     ModelState.AddModelError(string.Empty, "Failed to update user. Please try again.");
                 }

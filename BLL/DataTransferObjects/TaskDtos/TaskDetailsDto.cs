@@ -19,6 +19,7 @@ namespace BLL.DataTransferObjects
         public DateTime CreatedAt { get; set; }
         public ProjectDto Project { get; set; }
         public List<TicketDto> Tickets { get; set; }
+        public string CtreatedBy { get; set; } = string.Empty; // User who created the task
 
         public bool IsDueSoon { get; set; }  // for if the task is due soon
         public bool IsOverdue { get; set; }  // for if the task is overdue

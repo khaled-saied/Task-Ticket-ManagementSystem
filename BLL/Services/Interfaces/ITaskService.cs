@@ -11,7 +11,7 @@ namespace BLL.Services.Interfaces
     {
         Task<IEnumerable<TaskDto>> GetAllTasks();
         Task<TaskDetailsDto> GetTaskById(int id);
-        Task<int> CreateTask(CreateTaskDto createTaskDto);
+        Task<int> CreateTask(CreateTaskDto createTaskDto,ApplicationUser user);
         Task<int> UpdateTask(UpdateTaskDto updateTaskDto);
         Task<bool> DeleteTask(int id);
         Count GetCount();

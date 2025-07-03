@@ -22,7 +22,8 @@ namespace BLL.Profiles
 
             // TaskDetailsDto -> TaskK (one-way, no ReverseMap)
             CreateMap<TaskK, TaskDetailsDto>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+                .ForMember(dest => dest.CtreatedBy, opt => opt.MapFrom(src => src.CreatedBy));
         }
     }
 }

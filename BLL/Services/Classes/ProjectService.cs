@@ -50,6 +50,7 @@ namespace BLL.Services.Classes
         {
             var Project = _mapper.Map<Project>(createProjectDto);
             Project.UserId = User.Id;
+            Project.CreatedBy = User.UserName;
 
             var isExist = _unitOfWork.GetRepository<Project, int>().GetAllActive()
                 .Any(p => p.Name == createProjectDto.Name);

@@ -16,6 +16,7 @@ namespace Ticket_ManagementSystem.Controllers
                                    UserManager<ApplicationUser> _userManager) : Controller
     {
         #region Index
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<IActionResult> Index()
         {
             var Comments = await _serviceManger.CommentService.GetAllCommentsAsync();

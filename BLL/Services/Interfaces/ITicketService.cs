@@ -11,7 +11,7 @@ namespace BLL.Services.Interfaces
     {
         Task<IEnumerable<TicketDto>> GetAllAsync();
         Task<TicketDetailsDto> GetTicketById(int id);
-        Task<int> CreateTicket(CreateTicketDto ticketDto);
+        Task<int> CreateTicket(CreateTicketDto ticketDto,ApplicationUser user);
         Task<int> UpdateTicket(UpdateTicketDto updateTicketDto);
         Task<bool> DeleteTicket(int id);
         Count GetCount();

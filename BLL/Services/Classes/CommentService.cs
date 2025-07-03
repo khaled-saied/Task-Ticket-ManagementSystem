@@ -51,6 +51,7 @@ namespace BLL.Services.Classes
             var comment = _mapper.Map<Comment>(commentDto);
             comment.TicketId = TicketId;
             comment.UserId = UserId;
+            comment.CreatedBy = user.UserName;
             await _unitOfWork.GetRepository<Comment, int>().AddAsync(comment);
             return await _unitOfWork.SaveChanges();
         }

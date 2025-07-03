@@ -1,10 +1,13 @@
 ﻿using System.Threading.Tasks;
 using BLL.DataTransferObjects.TaskDtos;
 using BLL.DataTransferObjects.TicketDtos;
+using BLL.Exceptions;
 using BLL.Services.Classes;
 using BLL.Services.Interfaces;
+using DAL.Models;
 using DAL.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -15,7 +18,8 @@ namespace Ticket_ManagementSystem.Controllers
 {
     public class TaskController(IServiceManger _serviceManger,
                                 ILogger<TaskController> _logger,
-                                IWebHostEnvironment _environment) : Controller
+                                IWebHostEnvironment _environment,
+                                UserManager<ApplicationUser> _userManager) : Controller
     {
         #region Index
         public async Task<IActionResult> Index(TaskStatusEnum? statusFilter)
@@ -68,10 +72,12 @@ namespace Ticket_ManagementSystem.Controllers
                         Title = model.Title,
                         Description = model.Description,
                         DueDate = model.DueDate,
-                        ProjectId = model.ProjectId
+                        ProjectId = model.ProjectId,
                     };
                     // 1. Call the service to create the task
-                    await _serviceManger.TaskService.CreateTask(taskDto);
+                    var UserLogin = await _userManager.GetUserAsync(User)
+                      ?? throw new NotFoundException("User not found");
+                    await _serviceManger.TaskService.CreateTask(taskDto,UserLogin);
                     // 2. Redirect to the task index page
                     if (!string.IsNullOrEmpty(model.ReturnUrl))
                         return Redirect(model.ReturnUrl);

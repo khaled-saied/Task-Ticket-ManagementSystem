@@ -140,8 +140,6 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Details
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {

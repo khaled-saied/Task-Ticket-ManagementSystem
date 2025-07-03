@@ -2,6 +2,7 @@
 using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.Interfaces;
 using DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace Ticket_ManagementSystem.Controllers
     {
 
         #region Index
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<IActionResult> Index(string searchVal)
         {
             var users = await _serviceManger.UserService.GetAllUsersAsync(searchVal);

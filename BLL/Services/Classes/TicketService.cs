@@ -38,11 +38,12 @@ namespace BLL.Services.Classes
         }
 
         //create ticket
-        public async Task<int> CreateTicket(CreateTicketDto ticketDto)
+        public async Task<int> CreateTicket(CreateTicketDto ticketDto, ApplicationUser user)
         {
             var task = await _unitOfWork.GetRepository<TaskK, int>().GetByIdAsync(ticketDto.TaskId)
                            ?? throw new NotFoundException($"Task with id {ticketDto.TaskId} not found");
             var ticket = _mapper.Map<Ticket>(ticketDto);
+            ticket.CreatedBy = user.UserName;
 
             var IfExists = await _unitOfWork.GetRepository<Ticket, int>().GetAllActive()
                 .AnyAsync(t => t.Title == ticket.Title && t.TaskId == ticket.TaskId);

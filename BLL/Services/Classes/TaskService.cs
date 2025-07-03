@@ -7,6 +7,7 @@ using BLL.DataTransferObjects.TaskDtos;
 using BLL.Exceptions;
 using BLL.Services.Interfaces;
 using DAL.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Classes
@@ -52,12 +53,13 @@ namespace BLL.Services.Classes
         }
 
         //Create task
-        public async Task<int> CreateTask(CreateTaskDto createTaskDto)
+        public async Task<int> CreateTask(CreateTaskDto createTaskDto, ApplicationUser user)
         {
             var project = await _unitOfWork.GetRepository<Project, int>().GetByIdAsync(createTaskDto.ProjectId);
             if (project == null)
                 throw new NotFoundException($"Project with id {createTaskDto.ProjectId} not found");
             var Task = _mapper.Map<CreateTaskDto, TaskK>(createTaskDto);
+            Task.CreatedBy = user.UserName;
 
             Task.Status = TaskStatusEnum.New;
             var isExist = await _unitOfWork.GetRepository<TaskK, int>().GetAllActive()

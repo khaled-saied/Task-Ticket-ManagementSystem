@@ -54,6 +54,43 @@
     </div>
 
     <div class="row mt-5">
+
+        <!-- Tasks Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <i class="bi bi-list-task"></i> User Tasks
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Tasks != null && Model.Tasks.Any())
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var task in Model.Tasks)
+                                {
+                                    <li class="list-group-item">
+                                        <h6 class="mb-1">@task.Title</h6>
+                                        <p class="mb-0">
+                                            <strong>Status:</strong> @task.Status <br />
+                                            <strong>Due:</strong> @task.DueDate.ToString("g") <br />
+                                            <a asp-action="Details" asp-controller="Task" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> Go To Details
+                                            </a>
+                                        </p>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No tasks assigned.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Comments Section -->
         <div class="col-md-6">
             <div class="card shadow-sm">

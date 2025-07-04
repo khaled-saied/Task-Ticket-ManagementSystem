@@ -76,6 +76,12 @@ namespace BLL.Services.Classes
                     Id = p.Id,
                     Name = p.Name,
                     Description = p.Description
+                }).ToList(),
+                Tasks = user.Tasks?.Select(t => new TaskDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Status = t.Status.ToString(),
                 }).ToList()
             };
         }

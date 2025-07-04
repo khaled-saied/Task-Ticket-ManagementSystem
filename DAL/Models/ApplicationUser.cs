@@ -17,6 +17,7 @@ namespace DAL.Models
         //Navigation properties
         public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
         public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual ICollection<TaskK> Tasks { get; set; } = new List<TaskK>();
 
     }
 }

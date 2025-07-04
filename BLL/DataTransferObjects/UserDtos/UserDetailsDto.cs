@@ -17,5 +17,6 @@ namespace BLL.DataTransferObjects.UserDtos
         public List<CommentDto>? Comments { get; set; }
         public List<ProjectDto>? Projects { get; set; }
         public string? ImageName { get; set; } = string.Empty;
+        public List<TaskDto>? Tasks { get; set; }
     }
 }

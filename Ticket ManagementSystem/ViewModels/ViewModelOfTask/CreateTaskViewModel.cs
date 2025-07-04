@@ -23,6 +23,9 @@ namespace Ticket_ManagementSystem.ViewModels.ViewModelOfTask
 
         public List<SelectListItem> Projects { get; set; } = new();
 
+        [Required(ErrorMessage = "Please select a user.")]
+        public string UserId { get; set; } = string.Empty;
+        public List<SelectListItem> Users { get; set; } = new();
         // New
         public string? ReturnUrl { get; set; }
     }

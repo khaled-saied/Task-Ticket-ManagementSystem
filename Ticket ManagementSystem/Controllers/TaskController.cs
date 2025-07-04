@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Ticket_ManagementSystem.ViewModels;
 using Ticket_ManagementSystem.ViewModels.ViewModelOfTask;
 
@@ -56,6 +57,7 @@ namespace Ticket_ManagementSystem.Controllers
             {
                 ProjectId = projectId ?? 0, // Set to 0 if no projectId is provided
                 Projects = await GetProjectSelectListAsync(),
+                Users = await GetUserSelectListAsync(),
                 ReturnUrl = returnUrl
             };
             return View(viewModel);
@@ -73,6 +75,7 @@ namespace Ticket_ManagementSystem.Controllers
                         Description = model.Description,
                         DueDate = model.DueDate,
                         ProjectId = model.ProjectId,
+                        UserId = model.UserId
                     };
                     // 1. Call the service to create the task
                     var UserLogin = await _userManager.GetUserAsync(User)
@@ -95,13 +98,12 @@ namespace Ticket_ManagementSystem.Controllers
             }
             // If we got this far, something failed, redisplay the form
             model.Projects = await GetProjectSelectListAsync();
+            model.Users = await GetUserSelectListAsync();
             return View(model);
         }
         #endregion
 
         #region Details
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> Details(int id)
         {
             if (id == 0)
@@ -228,5 +230,18 @@ namespace Ticket_ManagementSystem.Controllers
         }
 
         #endregion
+
+        #region Get User
+        private async Task<List<SelectListItem>> GetUserSelectListAsync()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return users.Select(u => new SelectListItem
+            {
+                Value = u.Id,
+                Text = u.UserName
+            }).ToList();
+        }
+        #endregion
+
     }
 }

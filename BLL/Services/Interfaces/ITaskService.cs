@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Repositories;
 
 namespace BLL.Services.Interfaces
 {
@@ -10,8 +11,10 @@ namespace BLL.Services.Interfaces
     {
         Task<IEnumerable<TaskDto>> GetAllTasks();
         Task<TaskDetailsDto> GetTaskById(int id);
-        Task<int> CreateTask(CreateTaskDto createTaskDto);
+        Task<int> CreateTask(CreateTaskDto createTaskDto,ApplicationUser user);
         Task<int> UpdateTask(UpdateTaskDto updateTaskDto);
         Task<bool> DeleteTask(int id);
+        Count GetCount();
+        Task<IEnumerable<TaskDto>> GetAllDeletedTasks();
     }
 }

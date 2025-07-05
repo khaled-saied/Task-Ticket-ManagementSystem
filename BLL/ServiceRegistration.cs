@@ -6,6 +6,8 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using BLL.Profiles;
+using BLL.Services.AttachmentServices;
+using BLL.Services.AttachmentServices.AttachmentServices;
 using BLL.Services.Classes;
 using BLL.Services.Interfaces;
 using DAL.Repositories;
@@ -39,6 +41,8 @@ namespace BLL
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<Func<IUserService>>(sp => () => sp.GetRequiredService<IUserService>());
+
+            services.AddTransient<IAttachmentServices, AttachmentService>();
 
             return services;
         }

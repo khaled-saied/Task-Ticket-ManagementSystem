@@ -11,5 +11,6 @@ namespace BLL.DataTransferObjects.CommentDtos
         //Id, Content
         public int Id { get; set; }
         public string Content { get; set; } = string.Empty;
+        public string ImageName { get; set; } = string.Empty;
     }
 }

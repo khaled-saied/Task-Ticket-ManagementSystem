@@ -16,6 +16,7 @@ namespace BLL.DataTransferObjects.TicketDtos
         public string Type { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty; 
+        public string CreatedBy { get; set; } = string.Empty; // User who created the ticket
         public TaskDto Task { get; set; } 
         public List<CommentDto> Comments { get; set; } = [];
 

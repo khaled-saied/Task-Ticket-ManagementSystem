@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
 using BLL.DataTransferObjects.TicketDtos;
+using BLL.Exceptions;
 using BLL.Services.Interfaces;
+using DAL.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Ticket_ManagementSystem.ViewModels.ViewModelOfTicket;
@@ -10,7 +13,8 @@ namespace Ticket_ManagementSystem.Controllers
 {
     public class TicketController(IServiceManger _serviceManger,
                                   ILogger<TicketController> _logger,
-                                  IWebHostEnvironment _environment) : Controller
+                                  IWebHostEnvironment _environment,
+                                  UserManager<ApplicationUser> _userManager) : Controller
     {
         public async Task<IActionResult> Index()
         {
@@ -50,7 +54,10 @@ namespace Ticket_ManagementSystem.Controllers
             {
                 try
                 {
-                    int Result = await _serviceManger.TicketService.CreateTicket(createTicketDto);
+                    // Get the current user
+                    var UserLogin = await _userManager.GetUserAsync(User)
+                                  ?? throw new NotFoundException("User not found");
+                    int Result = await _serviceManger.TicketService.CreateTicket(createTicketDto,UserLogin);
 
                     string Message;
                     if(Result > 0)

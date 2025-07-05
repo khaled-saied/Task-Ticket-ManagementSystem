@@ -5,13 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using BLL.DataTransferObjects.UserDtos;
 using BLL.Exceptions;
+using BLL.Services.AttachmentServices.AttachmentServices;
 using BLL.Services.Interfaces;
+using DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services.Classes
 {
-    public class UserService(UserManager<ApplicationUser> _userManager) : IUserService
+    public class UserService(UserManager<ApplicationUser> _userManager,
+                             IAttachmentServices _attachmentServices) : IUserService
     {
         public async Task<List<UserDto>> GetAllUsersAsync(string? searchVal = null)
         {
@@ -35,9 +38,9 @@ namespace BLL.Services.Classes
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    FullName = user.FullName,
                     Email = user.Email,
-                    Roles = roles.ToList()
+                    Roles = roles.ToList(),
+                    ImageName = user.ImageName
                 });
             }
 
@@ -57,6 +60,7 @@ namespace BLL.Services.Classes
             return new UserDetailsDto()
             {
                 Id = user.Id,
+                ImageName = user.ImageName,
                 UserName = user.UserName,
                 FullName = user.FullName,
                 Email = user.Email,
@@ -72,6 +76,12 @@ namespace BLL.Services.Classes
                     Id = p.Id,
                     Name = p.Name,
                     Description = p.Description
+                }).ToList(),
+                Tasks = user.Tasks?.Select(t => new TaskDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Status = t.Status.ToString(),
                 }).ToList()
             };
         }
@@ -81,8 +91,18 @@ namespace BLL.Services.Classes
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == updateUserDto.Id)
                 ?? throw new NotFoundException($"User with ID {updateUserDto.Id} not found.");
 
-            user.ConcurrencyStamp = updateUserDto.ConcurrencyStamp;
+            if (updateUserDto.ImageName is not null && updateUserDto.Image is not null)
+            {
+                _attachmentServices.Delete(updateUserDto.ImageName);
+            }
 
+            if (updateUserDto.Image is not null)
+            {
+                var imageName = _attachmentServices.Upload(updateUserDto.Image,"Images");
+                user.ImageName = imageName;
+            }   
+
+            user.ConcurrencyStamp = updateUserDto.ConcurrencyStamp;
             user.UserName = updateUserDto.UserName;
             user.FullName = updateUserDto.FullName;
             user.Email = updateUserDto.Email;

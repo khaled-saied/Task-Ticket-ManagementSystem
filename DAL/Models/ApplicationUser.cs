@@ -12,9 +12,12 @@ namespace DAL.Models
         //FullName
         public string FullName { get; set; } = string.Empty;
 
+        public string? ImageName { get; set; } = "staticImage.jpeg";
+
         //Navigation properties
         public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
         public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual ICollection<TaskK> Tasks { get; set; } = new List<TaskK>();
 
     }
 }

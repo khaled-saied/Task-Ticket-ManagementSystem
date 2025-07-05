@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = ViewBag.Layout as string;
 }
 
 <div class="container mt-5">
@@ -37,6 +37,7 @@
                             <a asp-action="Details" asp-controller="Ticket" asp-route-id="@ViewBag.TicketId" class="btn btn-secondary rounded-pill px-3">
                                 ← Back
                             </a>
+
                             <button type="submit" class="btn btn-warning rounded-pill px-4">
                                 <i class="bi bi-save"></i> Save Changes
                             </button>

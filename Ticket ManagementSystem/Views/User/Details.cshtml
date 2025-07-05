@@ -1,8 +1,9 @@
-﻿
-@model UserDetailsDto
+﻿@model UserDetailsDto
 @{
     ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = ViewBag.ReturnTo == "_Layout"
+        ? "~/Views/Shared/_Layout.cshtml"
+        : "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
 <div class="container mt-4">
@@ -11,6 +12,16 @@
             <h3 class="card-title mb-3">
                 <i class="bi bi-person-circle"></i> User Details
             </h3>
+
+            <!-- User Image -->
+            <div class="text-center mb-4">
+                <img src="~/Files/Images/@(string.IsNullOrEmpty(Model.ImageName) ? "staticImage.jpeg" : Model.ImageName)"
+                     class="rounded-circle border border-2"
+                     alt="User Image"
+                     style="width: 150px; height: 150px; object-fit: cover;" />
+            </div>
+            
+
             <dl class="row">
                 <dt class="col-sm-3">User Name:</dt>
                 <dd class="col-sm-9">@Model.UserName</dd>
@@ -20,7 +31,7 @@
 
                 <dt class="col-sm-3">Email:</dt>
                 <dd class="col-sm-9">@Model.Email</dd>
-                
+
                 <dt class="col-sm-3">PhoneNumber:</dt>
                 <dd class="col-sm-9">@Model.PhoneNumber</dd>
 
@@ -43,6 +54,43 @@
     </div>
 
     <div class="row mt-5">
+
+        <!-- Tasks Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <i class="bi bi-list-task"></i> User Tasks
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Tasks != null && Model.Tasks.Any())
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var task in Model.Tasks)
+                                {
+                                    <li class="list-group-item">
+                                        <h6 class="mb-1">@task.Title</h6>
+                                        <p class="mb-0">
+                                            <strong>Status:</strong> @task.Status <br />
+                                            <strong>Due:</strong> @task.DueDate.ToString("g") <br />
+                                            <a asp-action="Details" asp-controller="Task" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> Go To Details
+                                            </a>
+                                        </p>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No tasks assigned.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Comments Section -->
         <div class="col-md-6">
             <div class="card shadow-sm">
@@ -99,10 +147,20 @@
     </div>
 
     <div class="mt-4">
-        <a asp-action="Index" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Back to List
+        @if (@ViewBag.ReturnTo == "_Layout")
+        {
+            <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+		}
+		else
+		{
+			<a asp-action="Index" class="btn btn-outline-secondary">
+				<i class="bi bi-arrow-left"></i> Back to List
+			</a>
+		}
+        <a asp-action="Edit" asp-route-id="@Model.Id" asp-route-returnTo="@ViewBag.ReturnTo" class="btn btn-primary">
+            <i class="bi bi-pencil-square"></i> Edit User
         </a>
     </div>
 </div>
-
-

@@ -50,6 +50,15 @@
                     <span asp-validation-for="ProjectId" class="text-danger small"></span>
                 </div>
 
+                <div class="mb-3">
+                    <label asp-for="UserId" class="form-label">Assign To</label>
+                    <select asp-for="UserId" asp-items="Model.Users" class="form-select">
+                        <option value="">-- Select a user --</option>
+                    </select>
+                    <span asp-validation-for="UserId" class="text-danger small"></span>
+                </div>
+
+
                 <button type="submit" class="btn btn-primary">Create Task</button>
                 <a href="@(Model.ReturnUrl ?? Url.Action("Index", "Task"))" class="btn btn-secondary ms-2">Cancel</a>
             </form>

@@ -1,9 +1,10 @@
 ﻿@model UpdateUserDto
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = ViewBag.ReturnTo == "_Layout"
+    ? "~/Views/Shared/_Layout.cshtml"
+    : "~/Views/Shared/_DashboardLayout.cshtml";
 }
-
 
 <div class="container mt-5">
     <div class="card shadow-sm border-0">
@@ -11,8 +12,8 @@
             <h4><i class="bi bi-pencil-square"></i> Update User</h4>
         </div>
         <div class="card-body">
-            <form asp-action="Edit" method="post">
-                <input type="hidden" asp-for="Id" />
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="returnTo" value="@ViewBag.ReturnTo" />
 
                 <div class="mb-3">
                     <label asp-for="UserName" class="form-label"></label>
@@ -32,13 +33,23 @@
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
+                <div class="mb-3">
+					<input asp-for="ImageName" hidden />
+                    <label asp-for="Image" class="form-label">Profile Image</label>
+                    <input asp-for="Image" type="file" class="form-control" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+
                 <input type="hidden" asp-for="ConcurrencyStamp" />
 
                 <button type="submit" class="btn btn-success">
                     <i class="bi bi-save"></i> Save Changes
                 </button>
-                <a asp-action="Index" class="btn btn-outline-secondary ms-2">
-                    <i class="bi bi-arrow-left"></i> Cancel
+                @* <a asp-action="Index" class="btn btn-outline-secondary ms-2"> *@
+                @*     <i class="bi bi-arrow-left"></i> Cancel *@
+                @* </a> *@
+                <a asp-action="Details" asp-route-id="@Model.Id" asp-route-returnTo="@ViewBag.ReturnTo" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Details
                 </a>
             </form>
         </div>
@@ -48,4 +59,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-

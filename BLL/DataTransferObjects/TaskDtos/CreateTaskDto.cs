@@ -13,6 +13,7 @@ namespace BLL.DataTransferObjects.TaskDtos
         public DateTime DueDate { get; set; }
         public TaskStatusEnum Status { get; set; } = TaskStatusEnum.New;
         public int ProjectId { get; set; } // FK to Project
+        public string? UserId { get; set; } // FK to ApplicationUser
 
     }
 }

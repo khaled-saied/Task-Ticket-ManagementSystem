@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ticket_ManagementSystem.Controllers
 {
-    //[Authorize(Roles ="Admin")]
-    [Authorize]
     public class ProjectController(IServiceManger _serviceManger,
                                    ILogger<ProjectController> _logger,
                                    IWebHostEnvironment _environment,
@@ -21,12 +19,25 @@ namespace Ticket_ManagementSystem.Controllers
         public async Task<IActionResult> Index()
         {
             var Projects = await _serviceManger.ProjectService.GetAllProjects();
+            if (User.IsInRole("Admin"))
+                ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+            else
+                ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
             return View(Projects);
         }
 
         #region Create 
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpGet]
-        public IActionResult Create() => View();
+        public IActionResult Create()
+        {
+            if (User.IsInRole("Admin"))
+                ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+            else
+                ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
+
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateProjectDto createProjectDto)
@@ -66,7 +77,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Update
-
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
@@ -83,6 +95,11 @@ namespace Ticket_ManagementSystem.Controllers
                     Name = project.Name,
                     Description = project.Description
                 };
+
+                if (User.IsInRole("Admin"))
+                    ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+                else
+                    ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
 
                 return View(updateDto);
             }
@@ -123,7 +140,6 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Details
-
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
@@ -134,6 +150,12 @@ namespace Ticket_ManagementSystem.Controllers
                 {
                     throw new NotFoundException("Project not found");
                 }
+
+                if (User.IsInRole("Admin"))
+                    ViewBag.Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+                else
+                    ViewBag.Layout = "~/Views/Shared/_Layout.cshtml";
+
                 return View(project);
             }
             catch (Exception ex)
@@ -146,7 +168,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Delete
-
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {

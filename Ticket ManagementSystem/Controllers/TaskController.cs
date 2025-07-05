@@ -1,12 +1,17 @@
 ﻿using System.Threading.Tasks;
 using BLL.DataTransferObjects.TaskDtos;
 using BLL.DataTransferObjects.TicketDtos;
+using BLL.Exceptions;
 using BLL.Services.Classes;
 using BLL.Services.Interfaces;
+using DAL.Models;
 using DAL.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Ticket_ManagementSystem.ViewModels;
 using Ticket_ManagementSystem.ViewModels.ViewModelOfTask;
 
@@ -14,7 +19,8 @@ namespace Ticket_ManagementSystem.Controllers
 {
     public class TaskController(IServiceManger _serviceManger,
                                 ILogger<TaskController> _logger,
-                                IWebHostEnvironment _environment) : Controller
+                                IWebHostEnvironment _environment,
+                                UserManager<ApplicationUser> _userManager) : Controller
     {
         #region Index
         public async Task<IActionResult> Index(TaskStatusEnum? statusFilter)
@@ -43,6 +49,7 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Create
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Create(int? projectId, string? returnUrl)
         {
@@ -50,6 +57,7 @@ namespace Ticket_ManagementSystem.Controllers
             {
                 ProjectId = projectId ?? 0, // Set to 0 if no projectId is provided
                 Projects = await GetProjectSelectListAsync(),
+                Users = await GetUserSelectListAsync(),
                 ReturnUrl = returnUrl
             };
             return View(viewModel);
@@ -66,10 +74,13 @@ namespace Ticket_ManagementSystem.Controllers
                         Title = model.Title,
                         Description = model.Description,
                         DueDate = model.DueDate,
-                        ProjectId = model.ProjectId
+                        ProjectId = model.ProjectId,
+                        UserId = model.UserId
                     };
                     // 1. Call the service to create the task
-                    await _serviceManger.TaskService.CreateTask(taskDto);
+                    var UserLogin = await _userManager.GetUserAsync(User)
+                      ?? throw new NotFoundException("User not found");
+                    await _serviceManger.TaskService.CreateTask(taskDto,UserLogin);
                     // 2. Redirect to the task index page
                     if (!string.IsNullOrEmpty(model.ReturnUrl))
                         return Redirect(model.ReturnUrl);
@@ -87,6 +98,7 @@ namespace Ticket_ManagementSystem.Controllers
             }
             // If we got this far, something failed, redisplay the form
             model.Projects = await GetProjectSelectListAsync();
+            model.Users = await GetUserSelectListAsync();
             return View(model);
         }
         #endregion
@@ -115,6 +127,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Update
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -171,6 +185,8 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Delete
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
@@ -214,5 +230,18 @@ namespace Ticket_ManagementSystem.Controllers
         }
 
         #endregion
+
+        #region Get User
+        private async Task<List<SelectListItem>> GetUserSelectListAsync()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return users.Select(u => new SelectListItem
+            {
+                Value = u.Id,
+                Text = u.UserName
+            }).ToList();
+        }
+        #endregion
+
     }
 }

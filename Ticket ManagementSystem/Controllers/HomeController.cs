@@ -81,9 +81,6 @@ public class HomeController(IServiceManger _serviceManger, ILogger<HomeControlle
         return View(result); 
     }
 
-
-
-
     public IActionResult Privacy()
     {
         return View();

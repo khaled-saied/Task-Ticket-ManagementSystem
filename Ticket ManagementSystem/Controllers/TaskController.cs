@@ -127,8 +127,6 @@ namespace Ticket_ManagementSystem.Controllers
         #endregion
 
         #region Update
-        [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -136,9 +134,12 @@ namespace Ticket_ManagementSystem.Controllers
                 return NotFound();
             var task = await _serviceManger.TaskService.GetTaskById(id);
             if (task == null)
-            {
                 return NotFound();
-            }
+
+            if(User.Identity?.Name != task.CtreatedBy || User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                return View("AccessDenied");
+
+
             var updateTaskViewModel = new UpdateTaskViewModel
             {
                 Id = task.Id,

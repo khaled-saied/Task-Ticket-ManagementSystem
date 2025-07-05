@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "AccessDenied";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="text-align:center; padding: 60px;">
+    <h1 style="font-size: 3em; color: #e74c3c;">
+        <i class="fas fa-ban"></i> Access Denied
+    </h1>
+    <p style="font-size: 1.5em; color: #555;">
+        You do not have permission to perform this action.
+    </p>
+
+    <a href="@Url.Action("Index", "Home")"
+       style="display: inline-block; margin-top: 30px; padding: 12px 25px;
+              background-color: #3498db; color: white; text-decoration: none;
+              border-radius: 8px; font-size: 1em;">
+        <i class="fas fa-home"></i> Back to Home
+    </a>
+</div>
+
+<!-- Optional: If using Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />

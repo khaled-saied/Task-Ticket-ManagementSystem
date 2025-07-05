@@ -3,6 +3,7 @@ using BLL.DataTransferObjects.TicketDtos;
 using BLL.Exceptions;
 using BLL.Services.Interfaces;
 using DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -100,6 +101,9 @@ namespace Ticket_ManagementSystem.Controllers
         {
             var ticket = await _serviceManger.TicketService.GetTicketById(id);
             if (ticket == null) return NotFound();
+            if(!HasAccess(ticket.CreatedBy))
+                return View("AccessDenied");
+
             var viewModel = new UpdateTicketViewModel
             {
                 Id = ticket.Id,
@@ -160,6 +164,8 @@ namespace Ticket_ManagementSystem.Controllers
             if (id <= 0) return BadRequest();
             var ticket = await _serviceManger.TicketService.GetTicketById(id);
             if (ticket == null) return NotFound();
+            if (!HasAccess(ticket.CreatedBy))
+                return View("AccessDenied");
             return View(ticket);
         }
 
@@ -194,5 +200,14 @@ namespace Ticket_ManagementSystem.Controllers
         }
         #endregion
 
+
+        #region Check The User
+        private bool HasAccess(string createdBy)
+        {
+            return User.Identity?.Name == createdBy ||
+                   User.IsInRole("Admin") ||
+                   User.IsInRole("SuperAdmin");
+        }
+        #endregion
     }
 }

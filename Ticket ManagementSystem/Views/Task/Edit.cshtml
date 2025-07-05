@@ -1,14 +1,13 @@
-﻿
-@model UpdateTaskViewModel
+﻿@model UpdateTaskViewModel
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <h2 class="mb-4">Edit Task</h2>
 
 <form asp-action="Edit" method="post" class="needs-validation">
+    <input type="hidden" asp-for="Id" />
 
     <div class="form-group mb-3">
         <label asp-for="Title" class="form-label"></label>
@@ -42,6 +41,14 @@
         <span asp-validation-for="DueDate" class="text-danger"></span>
     </div>
 
+    <div class="form-group mb-4">
+        <label asp-for="UserId" class="form-label"></label>
+        <select asp-for="UserId" asp-items="Model.Users" class="form-control">
+            <option value="">-- Select User --</option>
+        </select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+
     <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary">Save</button>
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>
@@ -53,4 +60,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-

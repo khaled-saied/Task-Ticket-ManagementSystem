@@ -132,7 +132,7 @@ namespace Ticket_ManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if(id == 0)
+            if (id == 0)
                 return NotFound();
             var task = await _serviceManger.TaskService.GetTaskById(id);
             if (task == null)
@@ -146,6 +146,8 @@ namespace Ticket_ManagementSystem.Controllers
                 Description = task.Description,
                 DueDate = task.DueDate,
                 Status = task.Status,
+                UserId = task.UserId,
+                Users = await GetUserSelectListAsync() // Populate the user select list
             };
             return View(updateTaskViewModel);
         }
@@ -164,7 +166,8 @@ namespace Ticket_ManagementSystem.Controllers
                         Title = model.Title,
                         Description = model.Description,
                         DueDate = model.DueDate,
-                        Status = model.Status
+                        Status = model.Status,
+                        UserId = model.UserId // FK to ApplicationUser
                     };
                     await _serviceManger.TaskService.UpdateTask(taskDto);
                     // 2. Redirect to the task index page

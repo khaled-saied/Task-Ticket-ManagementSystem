@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Ticket_ManagementSystem.CustomValidationAttribute;
 
 namespace Ticket_ManagementSystem.ViewModels.ViewModelOfTask
@@ -19,5 +20,7 @@ namespace Ticket_ManagementSystem.ViewModels.ViewModelOfTask
         [Required]
         [FutureDate(ErrorMessage = "Due date must be in the future.")]
         public DateTime DueDate { get; set; }
+        public string? UserId { get; set; } // FK to ApplicationUser
+        public List<SelectListItem> Users { get; set; } = new List<SelectListItem>();
     }
 }

@@ -21,6 +21,7 @@ namespace BLL.DataTransferObjects
         public List<TicketDto> Tickets { get; set; }
         public string CtreatedBy { get; set; } = string.Empty; // User who created the task
         public string? AssignedTo { get; set; } // User to whom the task is assigned, nullable if not assigned
+        public string? UserId { get; set; } // FK to ApplicationUser, nullable if not assigned
         public bool IsDueSoon { get; set; }  // for if the task is due soon
         public bool IsOverdue { get; set; }  // for if the task is overdue
     }
